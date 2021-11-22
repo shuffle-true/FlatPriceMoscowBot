@@ -9,3 +9,27 @@ price_button = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+confirm_button = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text="Подтвердить"),
+        ],
+        [
+            KeyboardButton(text="Отменить"),
+        ],
+    ],
+    resize_keyboard=True
+)
+
+confirm_algorithm_button = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text="Продолжить обработку"),
+        ],
+        [
+            KeyboardButton(text="Прервать"),
+        ],
+    ],
+    resize_keyboard=True
+)

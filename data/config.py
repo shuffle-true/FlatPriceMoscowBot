@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from data.TOKEN_config import TOKEN
+from data.all_config import TOKEN
 
 load_dotenv()
 
