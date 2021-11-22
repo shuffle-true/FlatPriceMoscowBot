@@ -1,13 +1,13 @@
 import os
 
 from dotenv import load_dotenv
+from data.TOKEN_config import TOKEN
 
 load_dotenv()
 
-BOT_TOKEN = "2103971375:AAFWfc-AYxS13sCFEqZYhZVtsDBS6XByXSc"
+BOT_TOKEN = TOKEN
 admins = [
-    469824120,314715042
-
+    314715042
 ]
 
 ip = os.getenv("ip")
