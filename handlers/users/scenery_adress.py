@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy import distance
 import ssl
+import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context
 from collections import OrderedDict
 import operator
