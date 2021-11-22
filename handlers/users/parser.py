@@ -7,8 +7,7 @@ def chrome_open():
     """
     
     Запускаем Хром
-
     """
-    chrome = webdriver.Chrome(r'C:\Users\Andrew\Documents\Develop VS Code\Telegram Bot\Flat Price Moscow\handlers\users\chromedriver.exe')
+    chrome = webdriver.Chrome(r'C:\Users\Sveta\PycharmProjects\FlatPriceMoscowBot\handlers\users\chromedriver.exe')
     return chrome
     
