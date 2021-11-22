@@ -33,3 +33,15 @@ confirm_algorithm_button = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+confirm_pars_button = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text="Начать парсинг квартир"),
+        ],
+        [
+            KeyboardButton(text="Остановить машину!"),
+        ],
+    ],
+    resize_keyboard=True
+)

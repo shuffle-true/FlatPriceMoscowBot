@@ -4,3 +4,4 @@ class ParserStates(StatesGroup):
     minprice = State()
     maxprice = State()
     continue_alghoritm = State()
+    flat_links_ready = State()

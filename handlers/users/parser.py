@@ -36,3 +36,5 @@ def links_flat(maxprice, minprice, answer_count_page):
         flat_links = [link.attrs['href'] for link in flat_links]
         flat_list.append(flat_links)
     return flat_list
+
+
