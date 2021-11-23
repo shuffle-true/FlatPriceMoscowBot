@@ -7,19 +7,17 @@ from states import ParserStates
 from keyboards.default import price_button, confirm_button, menu_second, confirm_algorithm_button, confirm_pars_button
 from aiogram.types import ReplyKeyboardRemove 
 import re, math
+import numpy as np
+import pandas as pd
 flag_maxprice=0
 flag_minprice=0
+print('__file__={0:<35} | __name__={1:<25} | __package__={2:<25}'.format(__file__,__name__,str(__package__)))
 
 def get_count_page(soup):
     title = soup.find('title').text
     digit = re.findall(r'\d+', title)
     return digit
 
-def save_flat_links_to_txt(flat_list):
-    f = open( 'flat_links.txt', 'w' )
-    for item in flat_list:
-        f.write("%s\n" % item)
-    f.close()
 
 
 
@@ -105,18 +103,15 @@ async def continue_alghoritm(message: types.Message):
 async def continue_alghoritm(message: types.Message, state = FSMContext):
     global max_price, min_price
     if message.text.isdigit() and int(message.text) <= 55:
-        global flat_list
-        flat_list = []
         answer_count_page = message.text
         await message.answer(f'Примерное время ожидания {0.16 * int(answer_count_page):.2f} мин')
-        flat_list.append(links_flat(max_price, min_price, answer_count_page))
-        save_flat_links_to_txt(flat_list)
+        df_links_flat = links_flat(max_price, min_price, answer_count_page)
+        df_links_flat.to_csv('flat_links_one_questions.csv', index = False)
         await message.answer('Файл со ссылками на квартиры создан успешно!\nПродолжаем?', reply_markup = confirm_pars_button)
         await state.finish()
     else:
         await message.answer('Убедитесь, что введено число и оно не превышает 55')
-
-
+    
 
 @dp.message_handler(text="Остановить машину!")
 async def cancel_parser(message: types.Message):
