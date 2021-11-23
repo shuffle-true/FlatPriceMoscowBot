@@ -36,7 +36,7 @@ def adress_preobras(answer):
     return answer
 
 def dist_metro(house_coord):
-    try
+    try:
         keys_list = dist_metro_server(house_coord)[0]
         sorted_dist_metro_dict = dist_metro_server(house_coord)[1]
     except:
