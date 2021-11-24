@@ -244,5 +244,4 @@ def run_preprocessing_script():
     df.to_csv('DataFrame_after_preprocessing.csv', index = False)
     data.to_csv('Value_after_preprocessing.csv', index = False)
 
-run_preprocessing_script()
     
