@@ -10,6 +10,7 @@ from aiogram.types import ReplyKeyboardRemove
 import re, math
 import numpy as np
 import pandas as pd
+from data.config import admins
 flag_maxprice=0
 flag_minprice=0
 
@@ -21,7 +22,7 @@ def get_count_page(soup):
 
 
 
-@dp.message_handler(Command("pars"))
+@dp.message_handler(Command("pars"), user_id=admins)
 async def get_chrome(message: types.Message):
     chrome = chrome_open()
     chrome.minimize_window()

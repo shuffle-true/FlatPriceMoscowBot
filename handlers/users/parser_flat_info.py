@@ -10,6 +10,7 @@ from .parser import get_flat
 from .df_append import df_append
 import numpy as np
 import pandas as pd
+from data.config import admins
 
     
 
@@ -70,16 +71,16 @@ async def count_flat(message: types.Message, state = FSMContext):
     else:
         await message.answer('Проверьте корректность!')
 
-@dp.message_handler(Command('data_preprocessing'))
+@dp.message_handler(Command('data_preprocessing'),  user_id=admins)
 async def count_flat(message: types.Message):
     run_preprocessing_script()
     await message.answer ('Предобработка завершена!\nФайлы успешно созданы')
 
-@dp.message_handler(Command("open_df"))
+@dp.message_handler(Command("open_df"),  user_id=admins)
 async def get_df_flat(message: types.Document):
     await message.reply_document(open("DataFrameFlat.xlsx","rb"))
 
-@dp.message_handler(Command("open_preprocessing"))
+@dp.message_handler(Command("open_preprocessing"),  user_id=admins)
 async def save_df_flat(message: types.Document):
     await message.reply_document(open("DataFrame_after_preprocessing.xlsx","rb"))
     await message.reply_document(open("Value_after_preprocessing.xlsx","rb"))
