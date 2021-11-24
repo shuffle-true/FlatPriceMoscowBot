@@ -2,6 +2,7 @@ from loader import dp
 from aiogram import types
 from aiogram.dispatcher.filters import Command
 from .parser import chrome_open, pages_count, links_flat
+from .config_for_server import pages_count_server
 from aiogram.dispatcher import FSMContext
 from states import ParserStates
 from keyboards.default import price_button, confirm_button, menu_second, confirm_algorithm_button, confirm_pars_button
@@ -76,7 +77,10 @@ async def cancel_start(message: types.Message):
 async def confirm_start(message: types.Message):
     global min_price, max_price, count_pages
     await message.answer('Принято! Начинается обработка...', reply_markup = ReplyKeyboardRemove())
-    soup = pages_count(min_price, max_price)
+    try:
+        soup = pages_count(min_price, max_price)
+    except:
+        soup = pages_count_server(min_price, max_price)
     await message.answer('Код получен!')
     digit_list = get_count_page(soup)
     try:
