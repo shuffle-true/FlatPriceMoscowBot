@@ -159,25 +159,59 @@ def dist_kreml(df):
     kreml_dist_list = []
     kreml = (55.752004, 37.617734)
     for i in range(df.shape[0]):
-        kreml_dist_list.append(distance.distance(df['coord'][i], kreml).km)
+        kreml_dist_list.append(float(distance.distance(df['coord'][i], kreml).km))
     df['dist_kreml'] = kreml_dist_list
     return df
 
 def circle(df):
-    if float(df['lat'])<=55.7888532 and float(df['lat'])>=55.7014943:
-        df['circle'] = ['Бульварное' if x<1.500 else 'Садовое' if 1.5000<=x<3.000 else '3 Транспортное' if 3.000<=x<6.0000 else 'В пределах МКАД' if 6.000<=x<14 else 'За МКАД'  for x in df['dist_kreml']]
-    else:
-        df['circle'] = ['Бульварное' if x<1.500 else 'Садовое' if 1.5000<=x<3.000 else '3 Транспортное' if 3.000<=x<6.0000 else 'В пределах МКАД' if 6.000<=x<17 else 'За МКАД'  for x in df['dist_kreml']]
+    circle = []
+    df['lat'] = df['lat'].apply(lambda x: float(x))
+    for i in range(df['lat'].shape[0]):
+        if df['lat'][i]<=55.7888532 and df['lat'][i] >=55.7014943:
+            if df['dist_kreml'][i] < 1.5:
+                circle.append('Бульварное')
+            elif df['dist_kreml'][i] >= 1.5 and df['dist_kreml'][i] < 3:
+                circle.append('Садовое')
+            elif df['dist_kreml'][i] >= 3 and df['dist_kreml'][i] < 6:
+                circle.append('3 Транспортное')
+            elif df['dist_kreml'][i] >= 6 and df['dist_kreml'][i] < 14:
+                circle.append('В пределах МКАД')
+            else:
+                circle.append('За МКАД')
+        else:
+            if df['dist_kreml'][i] < 1.5:
+                circle.append('Бульварное')
+            elif df['dist_kreml'][i] >= 1.5 and df['dist_kreml'][i] < 3:
+                circle.append('Садовое')
+            elif df['dist_kreml'][i] >= 3 and df['dist_kreml'][i] < 6:
+                circle.append('3 Транспортное')
+            elif df['dist_kreml'][i] >= 6 and df['dist_kreml'][i] < 17:
+                circle.append('В пределах МКАД')
+            else:
+                circle.append('За МКАД')
+    df['circle'] = circle
     return df
 
 def get_dummy(df):
-    df_dummy = pd.get_dummies(df[['okrug','district','type_of_housing','repair_flat','view_outside','type_house','parking','circle']])
+    df_dummy = pd.get_dummies(df[['okrug','district','type_of_housing','repair_flat','view_outside','type_house','parking', 'circle']])
     df = pd.concat([df, df_dummy], axis = 1)
     return df
 
 def data_df(df):
     data = df['price']
     return data
+
+def standart_after_preprocessing(df):
+    df = df.drop(['price','city','okrug','district','street', 'house','metro_time','Тип жилья',
+             'Площадь комнат+ обозначение смежных комнат- обозначение изолированных комнат',
+             'Высота потолков','Санузел','Ремонт',
+             'Вид из окон','Тип дома','Общая','Жилая','Кухня','Этаж',
+            'Парковка','Аварийность','Балкон/лоджия','Ванная комната','Газоснабжение',
+            'Год постройки','Отопление','Планировка','Подъезды','Построен','Строительная серия',
+            'Тип перекрытий',
+            'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house',
+            'parking','circle', 'flat_name', 'coord', 'lat', 'lon'], axis=1)
+    return df
 
 def run_preprocessing_script():
     df = read_csv()
@@ -196,6 +230,7 @@ def run_preprocessing_script():
     df = circle(df)
     df = get_dummy(df)
     data = data_df(df)
+    df = standart_after_preprocessing(df)
     df.to_excel('DataFrame_after_preprocessing.xlsx', index = False)
     data.to_excel('Value_after_preprocessing.xlsx', index = False)    
     df.to_csv('DataFrame_after_preprocessing.csv', index = False)
