@@ -27,7 +27,8 @@ def pages_count_server(minprice, maxprice):
     options.add_argument('--no-sandbox')
     options.add_argument("--disable-setuid-sandbox")
     chrome=webdriver.Chrome(options=options)
-    return chrome.get(page_link)
+    soup = BeautifulSoup(chrome.page_source, features = 'html.parser')
+    return soup
 
 def links_flat_server(maxprice, minprice, answer_count_page):
     df_flat_links = pd.DataFrame()

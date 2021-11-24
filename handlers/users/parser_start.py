@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 flag_maxprice=0
 flag_minprice=0
-print('__file__={0:<35} | __name__={1:<25} | __package__={2:<25}'.format(__file__,__name__,str(__package__)))
 
 def get_count_page(soup):
     title = soup.find('title').text
