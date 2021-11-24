@@ -42,7 +42,26 @@ async def count_flat(message: types.Message, state = FSMContext):
                     await message.answer('Файлы добавлены!')
                 except AttributeError:
                     pass
-            await message.answer('Информация добавлена')
+            if i == round(count_flat*0.1):
+                await message.answer('Выполнено 10%')
+            if i == round(count_flat*0.2):
+                await message.answer('Выполнено 20%')
+            if i == round(count_flat*0.3):
+                await message.answer('Выполнено 30%')
+            if i == round(count_flat*0.4):
+                await message.answer('Выполнено 40%')
+            if i == round(count_flat*0.5):
+                await message.answer('Выполнено 50%')
+            if i == round(count_flat*0.6):
+                await message.answer('Выполнено 60%')
+            if i == round(count_flat*0.7):
+                await message.answer('Выполнено 70%')
+            if i == round(count_flat*0.8):
+                await message.answer('Выполнено 80%')
+            if i == round(count_flat*0.9):
+                await message.answer('Выполнено 90%')
+            if i == round(count_flat*0.95):
+                await message.answer('Выполнено 95%')
         df.to_csv('DataFrameFlat.csv', index = False)
         df.to_excel('DataFrameFlat.xlsx', index = False)
         await message.answer('Файлы добавлены!')
