@@ -154,6 +154,13 @@ def fillna(df):
     df['parking'] = df['Парковка'].fillna('Открытая')
     return df
 
+def append_info_district(df):
+    df_1 = pd.read_csv('DISTRICT.csv')
+    df_1 = df_1[['Название района', 'Музеи', 'Салоны красоты косметических услуг',
+    'Рестораны / кафе быстрого питания','Продовольственные магазины', 'Городские парки развлечений, аттракционов','Аптеки по продаже лекарств',
+    'Маммологические центры, больницы, клиники, поликлиники','Фитнес-клубы, центры, залы']]
+    df = df.merge(df_1, left_on="district", right_on="Название района")
+    return df
 
 def dist_kreml(df):
     kreml_dist_list = []
@@ -210,7 +217,7 @@ def standart_after_preprocessing(df):
             'Год постройки','Отопление','Планировка','Подъезды','Построен','Строительная серия',
             'Тип перекрытий',
             'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house',
-            'parking','circle', 'flat_name', 'coord', 'lat', 'lon'], axis=1)
+            'parking','circle', 'flat_name', 'coord', 'lat', 'lon', 'Название района'], axis=1)
     return df
 
 def run_preprocessing_script():
@@ -226,6 +233,7 @@ def run_preprocessing_script():
     df = sum_balkon(df)
     df = house_list_clean(df)
     df = fillna(df)
+    df = append_info_district(df)
     df = dist_kreml(df)
     df = circle(df)
     df = get_dummy(df)
@@ -235,4 +243,6 @@ def run_preprocessing_script():
     data.to_excel('Value_after_preprocessing.xlsx', index = False)    
     df.to_csv('DataFrame_after_preprocessing.csv', index = False)
     data.to_csv('Value_after_preprocessing.csv', index = False)
+
+run_preprocessing_script()
     
