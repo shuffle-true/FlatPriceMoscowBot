@@ -74,11 +74,11 @@ async def count_flat(message: types.Message):
     run_preprocessing_script()
     await message.answer ('Предобработка завершена!\nФайлы успешно созданы')
 
-@dp.message_handler(Command("save_df_xlsx"))
+@dp.message_handler(Command("open_df"))
 async def get_df_flat(message: types.Document):
     await message.reply_document(open("DataFrameFlat.xlsx","rb"))
 
-@dp.message_handler(Command("save_df_after_preprocessing_xlsx"))
+@dp.message_handler(Command("open_preprocessing"))
 async def save_df_flat(message: types.Document):
     await message.reply_document(open("DataFrame_after_preprocessing.xlsx","rb"))
     await message.reply_document(open("Value_after_preprocessing.xlsx","rb"))
