@@ -59,3 +59,14 @@ def dist_metro_server(house_coord):
         sorted_dist_metro_dict[k] = v
     keys_list = list(sorted_dist_metro_dict.keys())
     return keys_list, sorted_dist_metro_dict
+
+
+def get_flat_server(flat_links, i):
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument("--disable-setuid-sandbox")
+    chrome=webdriver.Chrome(options=options)
+    chrome.get(flat_links[int(i)])
+    soup = BeautifulSoup(chrome.page_source, features="html.parser")
+    return soup

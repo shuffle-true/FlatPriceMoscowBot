@@ -37,8 +37,8 @@ async def get_min_price(message: types.Message):
 async  def enter_min_price(message: types.Message,state=FSMContext):
     global flag_minprice, min_price
     min_price = message.text
-    flag_minprice=1
-    if flag_maxprice == 1 and flag_minprice == 1:
+    flag_minprice += 1
+    if (flag_maxprice == 1 and flag_minprice == 1) or (flag_maxprice == 2 and flag_minprice == 2) or(flag_maxprice == 3 and flag_minprice == 3) or(flag_maxprice == 4 and flag_minprice == 4) or(flag_maxprice == 5 and flag_minprice == 5) or (flag_maxprice == 6 and flag_minprice == 6) or (flag_maxprice == 7 and flag_minprice == 7) or (flag_maxprice == 8 and flag_minprice == 8) or (flag_maxprice == 9 and flag_minprice == 9) or (flag_maxprice == 10 and flag_minprice == 10) or (flag_maxprice == 11 and flag_minprice == 11) or (flag_maxprice == 12 and flag_minprice == 12):
         await message.answer('Данные получены! \nПодтвердите выполнение алгоритма', reply_markup=confirm_button)
     else:
         await message.answer('Выберите дальнейшее действие', reply_markup=price_button)
@@ -55,8 +55,8 @@ async def get_max_price(message: types.Message):
 async  def enter_max_price(message: types.Message,state=FSMContext):
     global flag_maxprice, max_price
     max_price = message.text
-    flag_maxprice=1
-    if flag_maxprice == 1 and flag_minprice == 1:
+    flag_maxprice += 1
+    if (flag_maxprice == 1 and flag_minprice == 1) or (flag_maxprice == 2 and flag_minprice == 2) or(flag_maxprice == 3 and flag_minprice == 3) or(flag_maxprice == 4 and flag_minprice == 4) or(flag_maxprice == 5 and flag_minprice == 5) or (flag_maxprice == 6 and flag_minprice == 6) or (flag_maxprice == 7 and flag_minprice == 7) or (flag_maxprice == 8 and flag_minprice == 8) or (flag_maxprice == 9 and flag_minprice == 9) or (flag_maxprice == 10 and flag_minprice == 10) or (flag_maxprice == 11 and flag_minprice == 11) or (flag_maxprice == 12 and flag_minprice == 12):
         await message.answer('Данные получены! \nПодтвердите выполнение алгоритма', reply_markup=confirm_button)
     else:
         await message.answer('Выберите дальнейшее действие', reply_markup=price_button)
@@ -102,7 +102,7 @@ async def continue_alghoritm(message: types.Message):
 @dp.message_handler(state = ParserStates.continue_alghoritm)
 async def continue_alghoritm(message: types.Message, state = FSMContext):
     global max_price, min_price
-    if message.text.isdigit() and int(message.text) <= 55:
+    if message.text.isdigit() and int(message.text) <= 55 and int(message.text) > 1:
         answer_count_page = message.text
         await message.answer(f'Примерное время ожидания {0.16 * int(answer_count_page):.2f} мин')
         df_links_flat = links_flat(max_price, min_price, answer_count_page)

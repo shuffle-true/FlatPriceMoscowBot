@@ -57,7 +57,6 @@ def adress_confirm(answer):
     geocoder = RateLimiter(Nominatim(user_agent='tutorial').geocode, min_delay_seconds=1)
     dictionary = geocoder('Москва, {}'.format(answer)).raw
     house_coord = ' '.join([dictionary['lat'], dictionary['lon']])
-    dictionary = geocoder('Москва, {}'.format(answer)).raw
     return dictionary, house_coord
 
 

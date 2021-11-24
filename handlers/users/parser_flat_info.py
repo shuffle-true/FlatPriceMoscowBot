@@ -1,9 +1,13 @@
+from attr import Attribute
+from handlers.users.config_for_server import get_flat_server
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Command
 from states import ParserStates
 from aiogram.types import ReplyKeyboardRemove
-import re
+from .parser import get_flat
+from .df_append import df_append
 import numpy as np
 import pandas as pd
 
@@ -20,8 +24,29 @@ async def continue_parser(message: types.Message):
 
 @dp.message_handler(state = ParserStates.flat_links_ready)
 async def count_flat(message: types.Message, state = FSMContext):
-    global flat_links
+    global flat_links, df
     if int(message.text) > 0 and int(message.text) <= len(flat_links):
         await message.answer('Принято')
+        count_flat = message.text
+        for i in range(int(count_flat)):
+            try:
+                try:
+                    soup = get_flat(flat_links, i)
+                    df = df_append(soup)
+                except AttributeError:
+                    pass
+            except:
+                try:
+                    soup = get_flat_server(flat_links, i)
+                    df = df_append(soup)
+                    await message.answer('Файлы добавлены!')
+                except AttributeError:
+                    pass
+            await message.answer('Информация добавлена')
+        df.to_csv('DataFrameFlat.csv', index = False)
+        df.to_excel('DataFrameFlat.xlsx', index = False)
+        await message.answer('Файлы добавлены!')
+        await state.finish()
     else:
         await message.answer('Проверьте корректность!')
+
