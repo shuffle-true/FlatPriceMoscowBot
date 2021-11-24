@@ -171,5 +171,7 @@ def df_append(soup):
     geocoder = RateLimiter(Nominatim(user_agent='tutorial').geocode, min_delay_seconds=1)
     dictionary = geocoder('Москва, {}'.format(str(flat_dict['street']) + ' ' + str(house_preobras(flat_dict['house'])))).raw
     flat_dict['coord'] = ' '.join([dictionary['lat'], dictionary['lon']])
+    flat_dict['lat'] = dictionary['lat']
+    flat_dict['lon'] = dictionary['lon']
     df = df.append(flat_dict, ignore_index = True)
     return df
