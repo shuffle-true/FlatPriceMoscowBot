@@ -28,6 +28,7 @@ async def count_flat(message: types.Message, state = FSMContext):
     if int(message.text) > 0 and int(message.text) <= len(flat_links):
         await message.answer('Принято')
         count_flat = message.text
+        await message.answer(f'Примерное время выполнения {int(count_flat)*10/60:.2f} минут')
         for i in range(int(count_flat)):
             try:
                 try:
