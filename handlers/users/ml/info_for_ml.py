@@ -93,7 +93,6 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         break
                 dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip())] = 1
                 await state.finish()   
-                await message.answer("Выход из состояния")
             else: 
                 dist_kreml = distance.distance(house_coord, coord_kreml).km
                 if dist_kreml < 1.5:
@@ -113,9 +112,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     if "район " or " район" in dictionary[i]:
                         district = dictionary[i]
                         break
-                dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip()] = 1
+                dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip())] = 1
                 await state.finish()
-                await message.answer("Выход из состояния")
         except AttributeError:
             await message.answer('Адрес не найден. Повторите ввод')    
     else:

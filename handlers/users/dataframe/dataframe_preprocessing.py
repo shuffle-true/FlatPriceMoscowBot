@@ -108,6 +108,7 @@ def summ_lift(df):
 
 
 def one_floor(df):
+    df['Этаж'] = df['Этаж'].fillna('5')
     floor_list = list(df['Этаж'])
     one_floor_list = []
     for i in range(len(floor_list)):
@@ -146,12 +147,18 @@ def house_list_clean(df):
     df['house'] = house_list_ready
     return df
 
+def clear_obj_not_coord(df):
+    df['coord'].replace('', np.nan, inplace=True)
+    df.dropna(subset=['coord'], inplace=True)
+    return df
+
 def fillna(df):
     df['built_house'] = df['built_house'].fillna('2000')
     df['repair_flat'] = df['Ремонт'].fillna('Косметический')
     df['view_outside'] = df['Вид из окон'].fillna('На улицу')
     df['type_house'] = df['Тип дома'].fillna('Монолитный')
     df['parking'] = df['Парковка'].fillna('Открытая')
+    df['Залог'] = np.where((df['Залог'] != 0), 1, df['Залог'])
     return df
 
 def append_info_district(df):
@@ -166,7 +173,9 @@ def dist_kreml(df):
     kreml_dist_list = []
     kreml = (55.752004, 37.617734)
     for i in range(df.shape[0]):
-        kreml_dist_list.append(float(distance.distance(df['coord'][i], kreml).km))
+        lat = df['lat'][i]
+        lon = df['lon'][i]
+        kreml_dist_list.append(float(distance.distance((lat, lon), kreml).km))
     df['dist_kreml'] = kreml_dist_list
     return df
 
@@ -200,11 +209,12 @@ def circle(df):
     return df
 
 def get_dummy(df):
-    df_dummy = pd.get_dummies(df[['okrug','district','type_of_housing','repair_flat','view_outside','type_house','parking', 'circle']])
+    df_dummy = pd.get_dummies(df[['district','type_of_housing','repair_flat','view_outside','type_house','parking', 'circle']])
     df = pd.concat([df, df_dummy], axis = 1)
     return df
 
 def data_df(df):
+    df['price']= df['price'].apply(lambda x: x.replace(' ', ''))
     data = df['price']
     return data
 
@@ -217,7 +227,7 @@ def standart_after_preprocessing(df):
             'Год постройки','Отопление','Планировка','Подъезды','Построен','Строительная серия',
             'Тип перекрытий',
             'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house',
-            'parking','circle', 'flat_name', 'coord', 'lat', 'lon', 'Название района'], axis=1)
+            'parking','circle', 'flat_name', 'coord', 'lat', 'lon', 'Название района', 'Количество спальных мест'], axis=1)
     return df
 
 def run_preprocessing_script():
@@ -232,6 +242,7 @@ def run_preprocessing_script():
     df = one_floor(df)
     df = sum_balkon(df)
     df = house_list_clean(df)
+    df = clear_obj_not_coord(df)
     df = fillna(df)
     df = append_info_district(df)
     df = dist_kreml(df)
