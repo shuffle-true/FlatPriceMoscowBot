@@ -88,10 +88,10 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 dict_df_hard['metro_time'] = metro_time
                 dictionary = dictionary['display_name'].split(', ')
                 for i in range(len(dictionary)):
-                    if "район " in dictionary[i]:
+                    if "район " or " район" in dictionary[i]:
                         district = dictionary[i]
                         break
-                dict_df_hard['disctrict_{}'.format(district.split(" ")[1])] = 1
+                dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip())] = 1
                 await state.finish()   
                 await message.answer("Выход из состояния")
             else: 
@@ -110,10 +110,10 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 dict_df_hard['metro_time'] = metro_time
                 dictionary = dictionary['display_name'].split(', ')
                 for i in range(len(dictionary)):
-                    if "район " in dictionary[i]:
+                    if "район " or " район" in dictionary[i]:
                         district = dictionary[i]
                         break
-                dict_df_hard['disctrict_{}'.format(district.split(" ")[1])] = 1
+                dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip()] = 1
                 await state.finish()
                 await message.answer("Выход из состояния")
         except AttributeError:
