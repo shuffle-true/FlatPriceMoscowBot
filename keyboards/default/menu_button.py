@@ -7,7 +7,7 @@ menu_first = ReplyKeyboardMarkup(
             KeyboardButton(text = "Узнать аренду квартиры! 🤪")
         ],
         [
-            KeyboardButton(text="Обратное геокодирование")
+            KeyboardButton(text="FAQ")
         ],
     ],
     resize_keyboard=True
@@ -54,3 +54,16 @@ menu_back_from_random_state = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+menu_confirm_start_ml = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text = "Продолжить")
+        ],    
+        [
+            KeyboardButton(text = "Отменить ввод")    
+        ],
+    ],
+    resize_keyboard=True
+    )
+

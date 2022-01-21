@@ -1,7 +1,8 @@
-﻿from aiogram import types
+﻿import time
+from aiogram import types
 import operator
 import statistics as st
-from keyboards.default import menu_first
+from keyboards.default import menu_first, menu_confirm_start_ml
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
 from loader import dp
@@ -13,6 +14,7 @@ import ssl
 import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context
 from collections import OrderedDict
+
 
 ## Кремлевские координаты
 coord_kreml = '55.751999 37.617734'
@@ -92,7 +94,12 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         district = dictionary[i]
                         break
                 dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip())] = 1
-                await state.finish()   
+                await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
+ предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
+                time.sleep(5)
+                await message.answer("Выберите дальнейшее действие ", reply_markup = menu_confirm_start_ml)
+                await state.finish()
+                
             else: 
                 dist_kreml = distance.distance(house_coord, coord_kreml).km
                 if dist_kreml < 1.5:
@@ -113,14 +120,25 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         district = dictionary[i]
                         break
                 dict_df_hard['disctrict_{}'.format(district.split("район")[0].strip())] = 1
+                await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
+предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
+                time.sleep(5)
+                await message.answer("Выберите дальнейшее действие ", reply_markup = menu_confirm_start_ml)
                 await state.finish()
         except AttributeError:
             await message.answer('Адрес не найден. Повторите ввод')    
     else:
         await message.answer('Проверьте формат ввода')
 
-            
 
-        
+@dp.message_handler(text = "Продолжить")
+async def continue_info_for_ml(message: types.Message):
+    await MenuButton.start_info_for_ml.set()
+
+
+#@dp.message_handler(state = MenuButton.start_info_for_ml)
+#async def get_adress_info(message: types.Message, state: FSMContext):
+
+
     
     
