@@ -9,7 +9,7 @@ from states import MenuButton
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy import distance
-from .config_for_server import dist_metro_server
+from handlers.users.logic.config_for_server import dist_metro_server
 import ssl
 import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context

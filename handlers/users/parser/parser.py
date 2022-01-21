@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from data.all_config import Andrew_PATH_driver
 import pandas as pd
-from .config_for_server import chrome_open_server, pages_count_server, links_flat_server, get_flat_server
+from handlers.users.logic.config_for_server import chrome_open_server, pages_count_server, links_flat_server, get_flat_server
 import re
 
 def chrome_open():

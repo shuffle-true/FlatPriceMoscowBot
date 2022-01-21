@@ -1,13 +1,14 @@
-from handlers.users.config_for_server import get_flat_server
+from handlers.users.logic.config_for_server import get_flat_server
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from states import ParserStates
 from aiogram.types import ReplyKeyboardRemove, message
-from .dataframe_preprocessing import run_preprocessing_script
+from handlers.users.dataframe.dataframe_preprocessing import run_preprocessing_script
+from handlers.users.dataframe.df_append import df_append
 from .parser import get_flat
-from .df_append import df_append
+
 import numpy as np
 import pandas as pd
 from data.config import admins

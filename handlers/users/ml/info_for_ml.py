@@ -9,7 +9,6 @@ from states import MenuButton
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy import distance
-from .config_for_server import dist_metro_server
 import ssl
 import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -93,7 +92,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         district = dictionary[i]
                         break
                 dict_df_hard['disctrict_{}'.format(district.split(" ")[1])] = 1
-                await state.finish()            
+                await state.finish()   
+                await message.answer("Выход из состояния")
             else: 
                 dist_kreml = distance.distance(house_coord, coord_kreml).km
                 if dist_kreml < 1.5:
@@ -115,6 +115,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         break
                 dict_df_hard['disctrict_{}'.format(district.split(" ")[1])] = 1
                 await state.finish()
+                await message.answer("Выход из состояния")
         except AttributeError:
             await message.answer('Адрес не найден. Повторите ввод')    
     else:

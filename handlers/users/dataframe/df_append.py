@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import re
-from .parser import name, price, metro_time, mesto, price_info, square_floor, res_info, house_info
+from handlers.users.parser.parser import name, price, metro_time, mesto, price_info, square_floor, res_info, house_info
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 

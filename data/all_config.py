@@ -1,2 +1,2 @@
 TOKEN = r"2145614320:AAEEkcgJRryvRVPhbVUdOWPAvM7iZwAV718"
-Andrew_PATH_driver = r"C:\Users\Andrew\Documents\Develop VS Code\Telegram Bot\Flat Price Moscow\FlatPriceMoscowBot\handlers\users\chromedriver.exe"
+Andrew_PATH_driver = r"C:\Users\Andrew\Desktop\tg-bot\handlers\users\parser\chromedriver.exe"

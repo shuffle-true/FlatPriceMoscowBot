@@ -1,11 +1,7 @@
-from .start import dp
-from .scenery_adress import dp
-from .menu_second import dp
-from .scenery_reverse_geocoder import dp
-from .parser_start import dp
-from .parser_flat_info import dp
-from .info_for_ml import dp
-from .pustoe_sms import dp
+from .scenery import dp
+from .ml import dp
+from .parser import dp
+from .logic import dp
 
 
 
