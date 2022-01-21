@@ -209,7 +209,7 @@ def data_df(df):
     return data
 
 def standart_after_preprocessing(df):
-    df = df.drop(['price','city','okrug','district','street', 'house','metro_time','Тип жилья',
+    df = df.drop(['price','city','okrug','district','street', 'house','Тип жилья',
              'Площадь комнат+ обозначение смежных комнат- обозначение изолированных комнат',
              'Высота потолков','Санузел','Ремонт',
              'Вид из окон','Тип дома','Общая','Жилая','Кухня','Этаж',

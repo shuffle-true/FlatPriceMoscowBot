@@ -1,9 +1,10 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
+
 menu_first = ReplyKeyboardMarkup(
     [
         [
-            KeyboardButton(text="Ввести адрес 🏠")
+            KeyboardButton(text = "Узнать аренду квартиры! 🤪")
         ],
         [
             KeyboardButton(text="Обратное геокодирование")
