@@ -8,3 +8,4 @@ class MenuButton(StatesGroup):
     koord_second = State()
     start_ml = State()
     start_info_for_ml = State()
+

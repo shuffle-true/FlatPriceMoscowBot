@@ -67,3 +67,12 @@ menu_confirm_start_ml = ReplyKeyboardMarkup(
     resize_keyboard=True
     )
 
+menu_confirm = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text = "ЖОПА")
+        ],
+    ],
+    resize_keyboard=True
+)
+
