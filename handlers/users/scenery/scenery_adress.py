@@ -1,6 +1,5 @@
 import time
 from aiogram import types
-from aiogram.dispatcher.filters.builtin import Command
 from keyboards.default import  menu_adress_second, menu_back_from_random_state, menu_second
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext

@@ -1,0 +1,1 @@
+from .menu_info_for_ml import zalog, comissions, predoplata
