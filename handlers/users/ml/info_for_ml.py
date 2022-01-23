@@ -2,7 +2,8 @@
 from aiogram import types
 import operator
 import statistics as st
-from keyboards.default import menu_first, menu_confirm_start_ml
+from keyboards.default import menu_confirm_start_ml
+from keyboards.inline import callback_dates, zalog
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
 from loader import dp
@@ -136,8 +137,11 @@ async def continue_info_for_ml(message: types.Message):
     await MenuButton.start_info_for_ml.set()
 
 
-#@dp.message_handler(state = MenuButton.start_info_for_ml)
-#async def get_adress_info(message: types.Message, state: FSMContext):
+@dp.message_handler(state = MenuButton.start_info_for_ml)
+async def get_adress_info(message: types.Message, state: FSMContext):
+    await message.answer("Укажите залог", reply_markup = zalog)
+    count = callback_data.get("count")
+    await message.answer (count)
 
 
     
