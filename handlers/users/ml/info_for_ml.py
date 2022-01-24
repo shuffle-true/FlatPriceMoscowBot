@@ -106,8 +106,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 else:
                     async with state.proxy() as data:
                         data['circle_За МКАД'] = 1
-                metro_time = st.median(
-                    [dict_station[keys_list[0]], dict_station[keys_list[1]], dict_station[keys_list[2]]])
+                metro_time = round(dict_station[keys_list[0]] / 0.066666666, 2)
                 async with state.proxy() as data:
                     data['metro_time'] = metro_time
                 dictionary = dictionary['display_name'].split(', ')
@@ -115,7 +114,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     if "район " or " район" in dictionary[i]:
                         district = dictionary[i]
                         break
-                district = district.split("район")[0].strip()
+                district = district.split("район")[1].strip()
                 df_1 = pd.read_csv('DISTRICT.csv')
                 df_1 = df_1[columns_1]
                 df_1_dict = dict(df_1)
@@ -148,8 +147,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 else:
                     async with state.proxy() as data:
                         data['circle_За МКАД'] = 1
-                metro_time = st.median(
-                    [dict_station[keys_list[0]], dict_station[keys_list[1]], dict_station[keys_list[2]]])
+                metro_time = round(dict_station[keys_list[0]] / 0.066666666, 2)
                 async with state.proxy() as data:
                     data['metro_time'] = metro_time
                 dictionary = dictionary['display_name'].split(', ')
@@ -157,17 +155,18 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     if ("район " or " район") in dictionary[i]:
                         district = dictionary[i]
                         break
-                district = district.split("район")[0].strip()
+                district = district.split("район")[1].strip()
                 df_1 = pd.read_csv('DISTRICT.csv')
                 df_1 = df_1[columns_1]
                 df_1_dict = dict(df_1)
                 for i in range(len(df_1_dict['Название района'])):
                     if district in df_1_dict['Название района'][i]:
                         oper = i
-
                 for i in range(len(columns_1_0)):
                     async with state.proxy() as data:
                         data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
+                async with state.proxy() as data:
+                    data['district_{}'.format(district)] = 1
                 await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
 предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
                 # time.sleep(5)
@@ -182,9 +181,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(choice_callback.filter(name="zalog"), state = [MenuButton.start_ml])
 async def get_zalog_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    zalog = callback_data["count"]
     async with state.proxy() as data:
-        data['Залог'] = zalog
+        data['Залог'] = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите информацию о комиссии",
                               reply_markup=comissions)
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
@@ -193,9 +191,8 @@ async def get_zalog_info(call: CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(choice_callback.filter(name="comissions"), state = [MenuButton.start_ml])
 async def get_comissoins_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    comissions = callback_data["count"]
     async with state.proxy() as data:
-        data['Комиссия'] = comissions
+        data['Комиссия'] = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите информацию о предоплате",
                               reply_markup=predoplata)
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
@@ -204,9 +201,8 @@ async def get_comissoins_info(call: CallbackQuery, callback_data: dict, state: F
 
 @dp.callback_query_handler(choice_callback.filter(name="prepay"), state = [MenuButton.start_ml])
 async def get_prepay_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    prepay = callback_data["count"]
     async with state.proxy() as data:
-        data['Предоплата'] = prepay
+        data['Предоплата'] = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите информацию о лифтах",
                               reply_markup=lift)
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
@@ -215,9 +211,8 @@ async def get_prepay_info(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 @dp.callback_query_handler(choice_callback.filter(name="lift"), state = [MenuButton.start_ml])
 async def get_lift_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    lift = callback_data["count"]
     async with state.proxy() as data:
-        data['elevators'] = lift
+        data['elevators'] = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nСколько комнат в квартире?",
                               reply_markup=count_room)
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
@@ -226,21 +221,19 @@ async def get_lift_info(call: CallbackQuery, callback_data: dict, state: FSMCont
 
 @dp.callback_query_handler(choice_callback.filter(name="room"), state = [MenuButton.start_ml])
 async def get_room_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    count_room = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите тип жилого помещения", reply_markup = type_of_room)
     async with state.proxy() as data:
-        data['count_room'] = count_room
+        data['count_room'] = callback_data["count"]
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
         await call.message.delete()
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_room"), state = [MenuButton.start_ml])
 async def get_type_of_room_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    type_of_room = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nКакой в квартире ремонт?", reply_markup = type_of_repair)
-    if type_of_room == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['type_of_housing_Квартира'] = 1
-    elif type_of_room == 1:
+    elif callback_data["count"] == '1':
         async with state.proxy() as data:
             data['type_of_housing_Студия'] = 1
     else:
@@ -252,15 +245,14 @@ async def get_type_of_room_info(call: CallbackQuery, callback_data: dict, state:
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_repair"), state = [MenuButton.start_ml])
 async def get_type_of_repair_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    type_of_repair = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nКуда выходят окна?", reply_markup = view_window)
-    if type_of_repair == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['repair_flat_Косметический'] = 1
-    elif type_of_repair == 1:
+    elif callback_data["count"] == '1':
         async with state.proxy() as data:
             data['repair_flat_Евроремонт'] = 1
-    elif type_of_repair == 2:
+    elif callback_data["count"] == '2':
         async with state.proxy() as data:
             data['repair_flat_Дизайнерский'] = 1
     else:
@@ -271,12 +263,11 @@ async def get_type_of_repair_info(call: CallbackQuery, callback_data: dict, stat
 
 @dp.callback_query_handler(choice_callback.filter(name="view_window"), state = [MenuButton.start_ml])
 async def get_view_window_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    type_of_repair = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nВыберите тип дома", reply_markup = type_of_house)
-    if type_of_room == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['view_outside_Во двор'] = 1
-    elif type_of_room == 1:
+    elif callback_data["count"] == '1':
         async with state.proxy() as data:
             data['view_outside_На улицу'] = 1
     else:
@@ -288,27 +279,26 @@ async def get_view_window_info(call: CallbackQuery, callback_data: dict, state: 
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_house"), state = [MenuButton.start_ml])
 async def get_type_of_house_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    type_of_house = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nВыберите тип парковки", reply_markup = type_of_parking)
-    if type_of_house == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['type_house_Блочный'] = 1
-    elif type_of_house == 1:
+    elif callback_data["count"] == '1':
         async with state.proxy() as data:
             data['type_house_Кирпичный'] = 1
-    elif type_of_house == 2:
+    elif callback_data["count"] == '2':
         async with state.proxy() as data:
             data['type_house_Деревянный'] = 1
-    elif type_of_house == 3:
+    elif callback_data["count"] == '3':
         async with state.proxy() as data:
             data['type_house_Панельный'] = 1
-    elif type_of_house == 4:
+    elif callback_data["count"] == '4':
         async with state.proxy() as data:
             data['type_house_Сталинский'] = 1
-    elif type_of_house == 6:
+    elif callback_data["count"] == '6':
         async with state.proxy() as data:
             data['type_house_Монолитный'] = 1
-    elif type_of_house == 7:
+    elif callback_data["count"] == '7':
         async with state.proxy() as data:
             data['type_house_Монолитно кирпичный'] = 1
     else:
@@ -320,16 +310,15 @@ async def get_type_of_house_info(call: CallbackQuery, callback_data: dict, state
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_parking"), state = [MenuButton.start_ml])
 async def get_type_of_parking_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    type_of_parking = callback_data["count"]
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nМебель в комнатах",
+    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите наличие мебели в комнатах",
                               reply_markup=mebel_room)
-    if type_of_parking == 2:
+    if callback_data["count"] == '2':
         async with state.proxy() as data:
             data['parking_Открытая'] = 1
-    elif type_of_parking == 1:
+    elif callback_data["count"] == '1':
         async with state.proxy() as data:
             data['parking_Подземная'] = 1
-    elif type_of_parking == 3:
+    elif callback_data["count"] == '3':
         async with state.proxy() as data:
             data['parking_Многоуровневая'] = 1
     else:
@@ -341,10 +330,9 @@ async def get_type_of_parking_info(call: CallbackQuery, callback_data: dict, sta
 
 @dp.callback_query_handler(choice_callback.filter(name="mebel_room"), state = [MenuButton.start_ml])
 async def get_mebel_room_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    mebel_room = callback_data["count"]
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nМебель на кухне",
+    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nЕсть ли кухонный гарнитур?",
                               reply_markup=mebel_kitchen)
-    if mebel_room == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['Мебель в комнатах'] = 1
     else:
@@ -355,10 +343,9 @@ async def get_mebel_room_info(call: CallbackQuery, callback_data: dict, state: F
 
 @dp.callback_query_handler(choice_callback.filter(name="mebel_kitchen"), state = [MenuButton.start_ml])
 async def get_mebel_kitchen_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    mebel_kitchen = callback_data["count"]
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nИмеется ли балкон?",
+    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите наличие балкона",
                               reply_markup=balcony)
-    if mebel_kitchen == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['Мебель на кухне'] = 1
     else:
@@ -369,11 +356,10 @@ async def get_mebel_kitchen_info(call: CallbackQuery, callback_data: dict, state
 
 @dp.callback_query_handler(choice_callback.filter(name="balcony"), state = [MenuButton.start_ml])
 async def get_balcony_info(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    balcony = callback_data["count"]
     await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nВведите площадь (можно примерную) квартиры, этаж и год постройки "
                               f"дома через пробел. \n\nПример:\n52 12 2016",
                               reply_markup=ReplyKeyboardRemove())
-    if balcony == 0:
+    if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['balcony'] = 1
     else:
@@ -397,7 +383,7 @@ async def get_square_info(message: types.Message, state: FSMContext):
     async with state.proxy() as df:
         df = pd.DataFrame()
     df = df.append(data.as_dict(), ignore_index=True)
-    df.to_excel('{}.xlsx'.format(message.from_user.id), index=False)
+    df.to_excel('{}.xlsx'.format(message.from_user.username), index=False)
     await state.finish()
     await message.answer("Информация получена! Ожидайте")
 

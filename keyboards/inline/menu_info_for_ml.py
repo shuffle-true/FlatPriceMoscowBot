@@ -196,7 +196,7 @@ type_of_parking = InlineKeyboardMarkup(row_width=2,
 mebel_room = InlineKeyboardMarkup(row_width=2,
                              inline_keyboard=[
                                  [
-                                     InlineKeyboardButton(text="Имеется",
+                                     InlineKeyboardButton(text="Мебель в есть",
                                                           callback_data=choice_callback.new(name="mebel_room", count=0)),
                                      InlineKeyboardButton(text="Отсутствует",
                                                           callback_data=choice_callback.new(name="mebel_room", count=1)),
@@ -208,7 +208,7 @@ mebel_room = InlineKeyboardMarkup(row_width=2,
 mebel_kitchen = InlineKeyboardMarkup(row_width=2,
                             inline_keyboard = [
                                                   [
-                                                      InlineKeyboardButton(text="Имеется",
+                                                      InlineKeyboardButton(text="В наличии",
                                                                            callback_data=choice_callback.new(name="mebel_kitchen", count=0)),
                                                       InlineKeyboardButton(text="Отсутствует",
                                                                            callback_data=choice_callback.new(name="mebel_kitchen", count=1)),
@@ -220,7 +220,7 @@ mebel_kitchen = InlineKeyboardMarkup(row_width=2,
 balcony = InlineKeyboardMarkup(row_width=2,
                             inline_keyboard = [
                                                   [
-                                                      InlineKeyboardButton(text="Имеется",
+                                                      InlineKeyboardButton(text="Да, балкон есть",
                                                                            callback_data=choice_callback.new(name="balcony", count=0)),
                                                       InlineKeyboardButton(text="Отсутствует",
                                                                            callback_data=choice_callback.new(name="balcony", count=1)),
