@@ -214,21 +214,21 @@ class FlatInfoSoup:
         """
         Площадь, этаж
         """
-        self.__square_floor = soup.findAll('div', attrs = {'class': 'a10a3f92e9--info-block--kXrDj'})
+        self.__square_floor = soup.findAll('div', attrs = {'class': 'a10a3f92e9--info--PZznE'})
         return self.__square_floor
 
 
 
     def res_info(self, soup):
         """
-        Наличие фурнитуры, телевизора и тд
+        Наличие фурнитуры, ванная комната и т.д.
         """
-        self.__res_info = soup.findAll('ul', attrs= {'class':'a10a3f92e9--list--jHl8z'})
+        self.__res_info = soup.findAll('ul', attrs= {'class':'a10a3f92e9--item--d9uzC'})
         return self.__res_info
 
     def house_info(self, soup):
         """
         Информация о доме (год постройки, материал, парковка и т.д)
         """
-        self.__house_info = soup.findAll('div', attrs= {'class':'a10a3f92e9--column--XINlk'})
+        self.__house_info = soup.findAll('div', attrs= {'class':'a10a3f92e9--item--M4jGb'})
         return self.__house_info
