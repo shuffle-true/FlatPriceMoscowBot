@@ -8,7 +8,7 @@ from states import MenuButton
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy import distance
-from handlers.users.logic.config_for_server import ParserServer
+
 import ssl
 import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -35,20 +35,17 @@ def adress_preobras(answer):
     return answer
 
 def dist_metro(house_coord):
-    try:
-        keys_list = ParserServer().dist_metro_server(house_coord)[0]
-        sorted_dist_metro_dict = ParserServer().dist_metro_server(house_coord)[1]
-    except:
-        df_metro = pd.read_csv('METRO.csv')
-        dist_metro = {}
-        for i in range(df_metro.shape[0]):
-            dist_metro[df_metro['station_name'][i]] = round(distance.distance(df_metro['coord'][i], house_coord).km,
-                                                            2)
-        sorted_dist_metro_tuple = sorted(dist_metro.items(), key = operator.itemgetter(1))
-        sorted_dist_metro_dict = OrderedDict()
-        for k, v in sorted_dist_metro_tuple:
-            sorted_dist_metro_dict[k] = v
-        keys_list = list(sorted_dist_metro_dict.keys())
+    df_metro = pd.read_csv('METRO.csv')
+    dist_metro = {}
+    for i in range(df_metro.shape[0]):
+        dist_metro[df_metro['station_name'][i]] = round(distance.distance(df_metro['coord'][i], house_coord).km,
+                                                        2)
+    sorted_dist_metro_tuple = sorted(dist_metro.items(), key = operator.itemgetter(1))
+    sorted_dist_metro_dict = OrderedDict()
+    for k, v in sorted_dist_metro_tuple:
+        sorted_dist_metro_dict[k] = v
+    keys_list = list(sorted_dist_metro_dict.keys())
+
     return keys_list, sorted_dist_metro_dict
 
     

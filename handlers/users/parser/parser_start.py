@@ -2,7 +2,6 @@ from loader import dp
 from aiogram import types
 from aiogram.dispatcher.filters import Command
 from .parser import Parser
-from handlers.users.logic.config_for_server import ParserServer
 from aiogram.dispatcher import FSMContext
 from states import ParserStates
 from keyboards.default import price_button, confirm_button, menu_second, confirm_algorithm_button, confirm_pars_button
