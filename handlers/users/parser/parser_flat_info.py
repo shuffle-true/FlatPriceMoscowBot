@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from states import ParserStates
 from aiogram.types import ReplyKeyboardRemove
-from handlers.users.dataframe.dataframe_preprocessing import run_preprocessing_script
+from handlers.users.dataframe.dataframe_preprocessing import Preprocessing
 from handlers.users.dataframe.df_append import df_append
 from .parser import Parser
 
@@ -66,7 +66,8 @@ async def count_flat(message: types.Message, state = FSMContext):
 
 @dp.message_handler(Command('data_preprocessing'),  user_id=admins)
 async def count_flat(message: types.Message):
-    run_preprocessing_script()
+    preproc = Preprocessing()
+    preproc.run_preprocessing_script()
     await message.answer ('Предобработка завершена!\nФайлы успешно созданы')
 
 @dp.message_handler(Command("open_df"),  user_id=admins)
