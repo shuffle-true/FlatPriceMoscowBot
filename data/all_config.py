@@ -1,6 +1,7 @@
 import pandas as pd
+from selenium.webdriver.chrome.service import Service
 TOKEN = r"2145614320:AAEEkcgJRryvRVPhbVUdOWPAvM7iZwAV718"
-Andrew_PATH_driver = r"C:\Users\Andrew\Desktop\tg-bot\handlers\users\parser\chromedriver.exe"
+Andrew_PATH_driver = Service(r"C:\Users\Andrew\Desktop\tg-bot\handlers\users\parser\chromedriver.exe")
 df = pd.read_csv("DataFrame_after_preprocessing.csv")
 columns = list(df.columns)
 

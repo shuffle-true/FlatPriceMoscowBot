@@ -1,13 +1,12 @@
-from handlers.users.logic.config_for_server import get_flat_server
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from states import ParserStates
-from aiogram.types import ReplyKeyboardRemove, message
+from aiogram.types import ReplyKeyboardRemove
 from handlers.users.dataframe.dataframe_preprocessing import run_preprocessing_script
 from handlers.users.dataframe.df_append import df_append
-from .parser import get_flat
+from .parser import Parser
 
 import numpy as np
 import pandas as pd
@@ -27,24 +26,17 @@ async def continue_parser(message: types.Message):
 @dp.message_handler(state = ParserStates.flat_links_ready)
 async def count_flat(message: types.Message, state = FSMContext):
     global flat_links, df
-    if int(message.text) > 0 and int(message.text) <= len(flat_links):
+    pars = Parser()
+    if int(message.text) > 1 and int(message.text) <= len(flat_links):
         await message.answer('Принято')
         count_flat = message.text
         await message.answer(f'Примерное время выполнения {int(count_flat)*10/60:.2f} минут')
         for i in range(int(count_flat)):
             try:
-                try:
-                    soup = get_flat(flat_links, i)
-                    df = df_append(soup)
-                except AttributeError:
-                    pass
-            except:
-                try:
-                    soup = get_flat_server(flat_links, i)
-                    df = df_append(soup)
-                    await message.answer('Файлы добавлены!')
-                except AttributeError:
-                    pass
+                soup = pars.get_flat(flat_links, i)
+                df = df_append(soup)
+            except AttributeError:
+                pass
             if i == round(int(count_flat)*0.1):
                 await message.answer('Выполнено 10%')
             if i == round(int(count_flat)*0.2):

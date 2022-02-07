@@ -3,13 +3,13 @@ import numpy as np
 import re
 from geopy import distance
 
+
 def read_csv():
     df = pd.read_csv('DataFrameFlat.csv')
     return df
 
 def append_square_flat(df):
     square_flat = []
-    name_flat_list = []
     name_flat_list = list(df['flat_name'])
     for i in range(len(name_flat_list)):
         square_flat.append(name_flat_list[i].split(', ')[1].replace('м²', '').strip())
@@ -19,7 +19,6 @@ def append_square_flat(df):
 def append_count_room(df, name_flat_list):
     count_room = []  # сюда будет записывать площадь
     for i in range(len(name_flat_list)):
-        room_list = []
         room_list = list(name_flat_list[i])
         if room_list[0].isdigit():
             count_room.append(room_list[0])
@@ -49,7 +48,6 @@ def append_type_housing(df, name_flat_list):
     return df
 
 def append_district(df):
-    name_district_list = []
     district_list = []
     name_district_list = list(df['district'])
     for i in range(len(name_district_list)):
@@ -69,7 +67,7 @@ def join_year_house(df):
         if year_house[i] == house_year[i]:
             pass
         else:
-            year_house[i] == house_year[i]
+            year_house[i] = house_year[i]
     df['built_house'] = year_house
     return df
 

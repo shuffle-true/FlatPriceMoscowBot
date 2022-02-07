@@ -1,15 +1,13 @@
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher.filters import Command
-from .parser import chrome_open, pages_count, links_flat
-from handlers.users.logic.config_for_server import pages_count_server
+from .parser import Parser
+from handlers.users.logic.config_for_server import ParserServer
 from aiogram.dispatcher import FSMContext
 from states import ParserStates
 from keyboards.default import price_button, confirm_button, menu_second, confirm_algorithm_button, confirm_pars_button
 from aiogram.types import ReplyKeyboardRemove 
 import re, math
-import numpy as np
-import pandas as pd
 from data.config import admins
 flag_maxprice=0
 flag_minprice=0
@@ -24,8 +22,9 @@ def get_count_page(soup):
 
 @dp.message_handler(Command("pars"), user_id=admins)
 async def get_chrome(message: types.Message):
-    chrome = chrome_open()
-    chrome.minimize_window()
+    global pars
+    pars = Parser()
+    pars.chrome_open()
     await message.answer('Драйвер запущен в тестовом. \nВыберите действие.', reply_markup = price_button)
 
 
@@ -75,12 +74,9 @@ async def cancel_start(message: types.Message):
 
 @dp.message_handler(text="Подтвердить")
 async def confirm_start(message: types.Message):
-    global min_price, max_price, count_pages
+    global min_price, max_price, count_pages, pars
     await message.answer('Принято! Начинается обработка...', reply_markup = ReplyKeyboardRemove())
-    try:
-        soup = pages_count(min_price, max_price)
-    except:
-        soup = pages_count_server(min_price, max_price)
+    soup = pars.pages_count(min_price, max_price)
     await message.answer('Код получен!')
     digit_list = get_count_page(soup)
     try:
@@ -105,11 +101,11 @@ async def continue_alghoritm(message: types.Message):
 
 @dp.message_handler(state = ParserStates.continue_alghoritm)
 async def continue_alghoritm(message: types.Message, state = FSMContext):
-    global max_price, min_price
+    global max_price, min_price, pars
     if message.text.isdigit() and int(message.text) <= 55 and int(message.text) > 1:
         answer_count_page = message.text
         await message.answer(f'Примерное время ожидания {0.16 * int(answer_count_page):.2f} мин')
-        df_links_flat = links_flat(max_price, min_price, answer_count_page)
+        df_links_flat = pars.links_flat(max_price, min_price, answer_count_page)
         df_links_flat.to_csv('flat_links_one_questions.csv', index = False)
         await message.answer('Файл со ссылками на квартиры создан успешно!\nПродолжаем?', reply_markup = confirm_pars_button)
         await state.finish()

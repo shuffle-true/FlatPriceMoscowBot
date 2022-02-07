@@ -8,7 +8,7 @@ from states import MenuButton
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy import distance
-from handlers.users.logic.config_for_server import dist_metro_server
+from handlers.users.logic.config_for_server import ParserServer
 import ssl
 import pandas as pd
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -36,8 +36,8 @@ def adress_preobras(answer):
 
 def dist_metro(house_coord):
     try:
-        keys_list = dist_metro_server(house_coord)[0]
-        sorted_dist_metro_dict = dist_metro_server(house_coord)[1]
+        keys_list = ParserServer().dist_metro_server(house_coord)[0]
+        sorted_dist_metro_dict = ParserServer().dist_metro_server(house_coord)[1]
     except:
         df_metro = pd.read_csv('METRO.csv')
         dist_metro = {}
