@@ -12,4 +12,5 @@ async def show_menu(message: types.Message):
 
     Описание команды /start
     """
+
     await message.answer(f"Привет, {message.from_user.full_name}!", reply_markup=menu_first)

@@ -154,6 +154,7 @@ class FlatInfoSoup:
     В этом классе собираем информацию о квартире
 
     """
+
     def __init__(self):
         pass
 
@@ -162,7 +163,9 @@ class FlatInfoSoup:
         """
         Имя объявления
         """
+
         self.__name = soup.find('h1', attrs={'class': 'a10a3f92e9--title--UEAG3'}).text
+
         return self.__name
 
 
@@ -171,7 +174,9 @@ class FlatInfoSoup:
         """
         Аренда
         """
+
         self.__price = soup.findAll('span', attrs= {'class':'a10a3f92e9--price_value--lqIK0'})[0].text.replace('\xa0', ' ').replace('₽/мес.', '').strip()
+
         return self.__price
 
 
@@ -180,10 +185,13 @@ class FlatInfoSoup:
         """
         Время до метро
         """
+
         self.__metro_time_list = []
         self.__metro_time = soup.findAll('span', attrs= {'class':'a10a3f92e9--underground_time--iOoHy'})
+
         for i in range(len(self.__metro_time)):
             self.__metro_time_list.append(int(re.findall(r'\d+', self.__metro_time[i].text)[0]))
+
         return self.__metro_time_list
 
 
@@ -192,10 +200,13 @@ class FlatInfoSoup:
         """
         Информация о районе округе и тд
         """
+
         self.__mesto_list = []
         self.__mesto = soup.findAll('a', attrs= {'class':'a10a3f92e9--link--ulbh5 a10a3f92e9--address-item--ScpSN'})
+
         for i in range (len(self.__mesto)):
             self.__mesto_list.append(self.__mesto[i].text)
+
         return self.__mesto_list
 
 
@@ -204,8 +215,10 @@ class FlatInfoSoup:
         """
         Залог, предоплата, коммисия
         """
+
         self.__price_info = soup.findAll('p', attrs= {'class':'a10a3f92e9--description--CPyUa'})
         self.__price_info = self.__price_info[0].text.replace('\xa0', "").split(',')
+
         return self.__price_info[0:3]
 
 
@@ -214,7 +227,9 @@ class FlatInfoSoup:
         """
         Площадь, этаж
         """
+
         self.__square_floor = soup.findAll('div', attrs = {'class': 'a10a3f92e9--info--PZznE'})
+
         return self.__square_floor
 
 
@@ -223,12 +238,16 @@ class FlatInfoSoup:
         """
         Наличие фурнитуры, ванная комната и т.д.
         """
+
         self.__res_info = soup.findAll('ul', attrs= {'class':'a10a3f92e9--item--d9uzC'})
+
         return self.__res_info
 
     def house_info(self, soup):
         """
         Информация о доме (год постройки, материал, парковка и т.д)
         """
+
         self.__house_info = soup.findAll('div', attrs= {'class':'a10a3f92e9--item--M4jGb'})
+
         return self.__house_info
