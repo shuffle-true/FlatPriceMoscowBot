@@ -2,6 +2,49 @@ import pandas as pd
 import numpy as np
 import re
 from geopy import distance
+import math
+
+city_center_coordinates = [55.7522, 37.6156]
+
+
+def get_azimuth(latitude, longitude):
+    rad = 6372795
+
+    llat1 = city_center_coordinates[0]
+    llong1 = city_center_coordinates[1]
+    llat2 = float(latitude)
+    llong2 = float(longitude)
+
+    lat1 = llat1 * math.pi / 180.
+    lat2 = llat2 * math.pi / 180.
+    long1 = llong1 * math.pi / 180.
+    long2 = llong2 * math.pi / 180.
+
+    cl1 = math.cos(lat1)
+    cl2 = math.cos(lat2)
+    sl1 = math.sin(lat1)
+    sl2 = math.sin(lat2)
+    delta = long2 - long1
+    cdelta = math.cos(delta)
+    sdelta = math.sin(delta)
+
+    y = math.sqrt(math.pow(cl2 * sdelta, 2) + math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2))
+    x = sl1 * sl2 + cl1 * cl2 * cdelta
+    ad = math.atan2(y, x)
+
+    x = (cl1 * sl2) - (sl1 * cl2 * cdelta)
+    y = sdelta * cl2
+    z = math.degrees(math.atan(-y / x))
+
+    if (x < 0):
+        z = z + 180.
+
+    z2 = (z + 180.) % 360. - 180.
+    z2 = - math.radians(z2)
+    anglerad2 = z2 - ((2 * math.pi) * math.floor((z2 / (2 * math.pi))))
+    angledeg = (anglerad2 * 180.) / math.pi
+
+    return round(angledeg, 2)
 
 class Preprocessing:
     def __init__(self):
@@ -25,7 +68,7 @@ class Preprocessing:
         self.__name_flat_list = list(df['flat_name'])
 
         for i in range(len(self.__name_flat_list)):
-            self.__square_flat.append(self.__name_flat_list[i].split(', ')[1].replace('м²', '').strip())
+            self.__square_flat.append(self.__name_flat_list[i].split(', ')[1].replace('м²', '').strip().replace(',', '.'))
 
         self.__df['square'] = self.__square_flat
 
@@ -56,11 +99,12 @@ class Preprocessing:
 
 
 
-    def __append_type_housing(self, name_flat_list):
+    def __append_type_housing(self, df, name_flat_list):
         """
         Добавляем тип квартиры
         """
 
+        self.__df = df
         self.__name_flat_list = name_flat_list
         self.__type_list = []
         self.__type_housing = []
@@ -269,13 +313,14 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__df['built_house'] = self.__df['built_house'].fillna(self.__df['built_house'].med())
+        self.__df['built_house'] = self.__df['built_house'].fillna(self.__df['built_house'].median())
         self.__df['repair_flat'] = self.__df['Ремонт'].fillna('Косметический')
         self.__df['view_outside'] = self.__df['Вид из окон'].fillna('На улицу')
         self.__df['type_house'] = self.__df['Тип дома'].fillna('Монолитный')
         self.__df['parking'] = self.__df['Парковка'].fillna('Открытая')
-        self.__df['metro_time'] = self.__df['metro_time'].fillna(self.__df['metro_time'].med())
+        self.__df['metro_time'] = self.__df['metro_time'].fillna(self.__df['metro_time'].median())
         self.__df['Залог'] = np.where((self.__df['Залог'] != 0), 1, self.__df['Залог'])
+        self.__df['Наличие мебели'] = self.__df['Мебель в комнатах']
 
         return self.__df
 
@@ -365,7 +410,7 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__df_dummy = pd.get_dummies(self.__df[['district','type_of_housing','repair_flat','view_outside','type_house','parking', 'circle']])
+        self.__df_dummy = pd.get_dummies(self.__df[['repair_flat','view_outside','type_house','parking', 'circle']])
         self.__df = pd.concat([self.__df, self.__df_dummy], axis = 1)
 
         return self.__df
@@ -388,7 +433,8 @@ class Preprocessing:
 
         self.__df = df
 
-        self.__df = self.__df.drop(['price','city','okrug','district','street', 'house','Тип жилья',
+        self.__df = self.__df.drop(['city','okrug','street', 'house','Тип жилья', 'Предоплата', 'Мебель на кухне', 'Мебель в комнатах',
+                                    'Залог',
                  'Площадь комнат+ обозначение смежных комнат- обозначение изолированных комнат',
                  'Высота потолков','Санузел','Ремонт','bathroom', 'Душевая кабина', 'Стиральная машина', 'Посудомоечная машина', 'Холодильник',
                       'Телевизор', 'Кондиционер', 'Интернет', 'Ванна',
@@ -396,10 +442,23 @@ class Preprocessing:
                 'Парковка','Аварийность','Балкон/лоджия','Ванная комната','Газоснабжение',
                 'Год постройки','Отопление','Планировка','Подъезды','Построен','Строительная серия',
                 'Тип перекрытий',
-                'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house',
-                'parking','circle', 'flat_name', 'coord', 'lat', 'lon', 'Название района', 'Количество спальных мест'], axis=1)
+                'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house', 'type_house_Старый фонд', 'type_house_Сталинский',
+                                    'type_house_Деревянный', 'repair_flat_Без ремонта',
+                'parking', 'parking_Многоуровневая', 'elevators', 'circle', 'flat_name', 'Название района', 'Количество спальных мест'], axis=1)
 
         return self.__df
+
+    def __append_azimut(self, df):
+        self.__df = df
+        azi = []
+        for i in range(self.__df.shape[0]):
+            azi.append(get_azimuth(*self.__df['coord'][i].split(' ')))
+
+        self.__df['azimut'] = azi
+
+        return self.__df
+
+
 
     def run_preprocessing_script(self):
         """
@@ -423,11 +482,12 @@ class Preprocessing:
         self.__df = self.__dist_kreml(self.__df)
         self.__df = self.__circle(self.__df)
         self.__df = self.__get_dummy(self.__df)
-        self.__data = self.__data_df(self.__df)
+        # self.__data = self.__data_df(self.__df)
         self.__df = self.__standart_after_preprocessing(self.__df)
+        self.__df = self.__append_azimut(self.__df)
         self.__df.to_excel('DataFrame_after_preprocessing.xlsx', index = False)
-        self.__data.to_excel('Value_after_preprocessing.xlsx', index = False)
+        # self.__data.to_excel('Value_after_preprocessing.xlsx', index = False)
         self.__df.to_csv('DataFrame_after_preprocessing.csv', index = False)
-        self.__data.to_csv('Value_after_preprocessing.csv', index = False)
+        # self.__data.to_csv('Value_after_preprocessing.csv', index = False)
 
     

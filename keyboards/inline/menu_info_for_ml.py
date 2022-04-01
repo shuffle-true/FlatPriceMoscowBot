@@ -113,8 +113,6 @@ type_of_repair = InlineKeyboardMarkup(row_width=2,
 
                                      InlineKeyboardButton(text="Косметический",
                                                           callback_data=choice_callback.new(name="type_of_repair", count=0)),
-                                     InlineKeyboardButton(text="Без ремонта",
-                                                          callback_data=choice_callback.new(name="type_of_repair", count=3))
                                  ]
                              ],
                              resize_keyboard=True
@@ -150,17 +148,10 @@ type_of_house = InlineKeyboardMarkup(row_width=3,
                                                                                             count=1))
                                  ],
                                  [
-                                     InlineKeyboardButton(text="Деревянный",
-                                                          callback_data=choice_callback.new(name="type_of_house", count=2)),
                                      InlineKeyboardButton(text="Панельный",
                                                           callback_data=choice_callback.new(name="type_of_house", count=3)),
-                                     InlineKeyboardButton(text="Сталинский",
-                                                          callback_data=choice_callback.new(name="type_of_house", count=4))
                                  ],
                                  [
-                                     InlineKeyboardButton(text="Старый фонд",
-                                                          callback_data=choice_callback.new(name="type_of_house",
-                                                                                            count=5)),
                                      InlineKeyboardButton(text="Монолитный",
                                                           callback_data=choice_callback.new(name="type_of_house",
                                                                                             count=6)),
@@ -185,9 +176,6 @@ type_of_parking = InlineKeyboardMarkup(row_width=2,
                                      InlineKeyboardButton(text="Открытая",
                                                           callback_data=choice_callback.new(name="type_of_parking",
                                                                                             count=2)),
-                                     InlineKeyboardButton(text="Многоуровневая",
-                                                          callback_data=choice_callback.new(name="type_of_parking",
-                                                                                            count=3))
                                  ]
                              ],
                              resize_keyboard=True

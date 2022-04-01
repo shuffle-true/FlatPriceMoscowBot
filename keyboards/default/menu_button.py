@@ -7,7 +7,7 @@ menu_first = ReplyKeyboardMarkup(
             KeyboardButton(text = "Узнать аренду квартиры! 🤪")
         ],
         [
-            KeyboardButton(text="FAQ")
+            KeyboardButton(text="Интерактивчик 😐")
         ],
     ],
     resize_keyboard=True
