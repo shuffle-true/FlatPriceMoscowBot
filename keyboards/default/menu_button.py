@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 menu_first = ReplyKeyboardMarkup(
@@ -9,9 +9,27 @@ menu_first = ReplyKeyboardMarkup(
         [
             KeyboardButton(text="Интерактивчик 😐")
         ],
+        [
+            KeyboardButton(text="Как мною пользоваться?")
+        ],
     ],
     resize_keyboard=True
 )
+
+ml_choice = ReplyKeyboardMarkup(
+    [
+        [
+            KeyboardButton(text = "Самостоятельный ввод")
+        ],
+        [
+            KeyboardButton(text="Ссылка на Циан")
+        ]
+    ],
+    resize_keyboard=True
+)
+
+
+
 menu_adress_second = ReplyKeyboardMarkup(
     [
         [

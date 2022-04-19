@@ -77,10 +77,10 @@ async def get_x(call: CallbackQuery, callback_data: dict, state: FSMContext):
             plt.xlabel('Площадь')
             plt.ylabel('Кол-во')
             plt.title('Распределение площади')
-            plt.savefig('{}.png'.format(call.message.from_user.id))
+            plt.savefig('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id))
             plt.clf()
 
-            photo = open('{}.png'.format(call.message.from_user.id), 'rb')
+            photo = open('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id), 'rb')
 
             await call.message.reply_photo(photo, reply_markup=menu_first)
 
@@ -89,10 +89,10 @@ async def get_x(call: CallbackQuery, callback_data: dict, state: FSMContext):
             plt.xlabel('Логарифм этажа')
             plt.ylabel('Кол-во')
             plt.title('Распределение этажей')
-            plt.savefig('{}.png'.format(call.message.from_user.id))
+            plt.savefig('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id))
             plt.clf()
 
-            photo = open('{}.png'.format(call.message.from_user.id), 'rb')
+            photo = open('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id), 'rb')
 
             await call.message.reply_photo(photo, reply_markup=menu_first)
 
@@ -101,10 +101,10 @@ async def get_x(call: CallbackQuery, callback_data: dict, state: FSMContext):
             plt.xlabel('Аренда')
             plt.ylabel('Кол-во')
             plt.title('Распределение арендной платы')
-            plt.savefig('{}.png'.format(call.message.from_user.id))
+            plt.savefig('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id))
             plt.clf()
 
-            photo = open('{}.png'.format(call.message.from_user.id), 'rb')
+            photo = open('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id), 'rb')
 
             await call.message.reply_photo(photo, reply_markup=menu_first)
 
@@ -128,10 +128,10 @@ async def get_y(call: CallbackQuery, callback_data: dict, state: FSMContext):
     plt.ylabel(oy)
     plt.title('Заданное распределение')
 
-    plt.savefig('{}.png'.format(call.message.from_user.id))
+    plt.savefig('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id))
     plt.clf()
 
-    photo = open('{}.png'.format(call.message.from_user.id), 'rb')
+    photo = open('IMG_INTERACTIVE/{}.png'.format(call.message.from_user.id), 'rb')
 
     await call.message.reply_photo(photo, reply_markup=menu_first)
 

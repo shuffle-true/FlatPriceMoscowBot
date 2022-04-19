@@ -85,7 +85,7 @@ async def count_flat(message: types.Message, state = FSMContext):
 @dp.message_handler(Command('data_preprocessing'),  user_id=admins)
 async def count_flat(message: types.Message):
     preproc = Preprocessing()
-    preproc.run_preprocessing_script()
+    preproc.run_preprocessing_script(True, 'DataFrameFlat.csv')
 
     await message.answer ('Предобработка завершена!\nФайлы успешно созданы')
 

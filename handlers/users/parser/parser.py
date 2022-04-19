@@ -2,6 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from data.all_config import Andrew_PATH_driver
 import pandas as pd
+import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 import re
@@ -110,7 +111,7 @@ class Parser:
 
         return self._df_flat_links
 
-    def get_flat(self, flat_links: pd.DataFrame, i: int):
+    def get_flat(self, flat_links: np.ndarray, i: int):
         """
         Парсинг конкретной квартиры
 
@@ -239,7 +240,7 @@ class FlatInfoSoup:
         Наличие фурнитуры, ванная комната и т.д.
         """
 
-        self.__res_info = soup.findAll('ul', attrs= {'class':'a10a3f92e9--item--d9uzC'})
+        self.__res_info = soup.findAll('li', attrs= {'class':'a10a3f92e9--item--d9uzC'})
 
         return self.__res_info
 

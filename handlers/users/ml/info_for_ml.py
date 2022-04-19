@@ -190,7 +190,7 @@ class Preobras:
         return round(angledeg, 2)
 
 
-@dp.message_handler(text="Узнать аренду квартиры! 🤪")
+@dp.message_handler(text="Самостоятельный ввод")
 async def start_get_info(message: types.Message):
     await message.answer("Введите улицу и номер дома в формате:\nЗолоторожский Вал, 11с7",
                          reply_markup=ReplyKeyboardRemove())
@@ -213,7 +213,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
             keys_list, dict_station = answr.dist_metro(house_coord)
             if float(dictionary['lat']) <= 55.7888532 and float(dictionary['lat']) >= 55.7014943:
                 dist_kreml = distance.distance(house_coord, coord_kreml).km
-                if dist_kreml > 25:
+                if dist_kreml > 20:
                     await message.answer("По указанному адресу найдена квартира за пределами МКАД.\n\nВозможные причины:\n"
                                          "1. Данный адрес находится не в Москве.\n2. В моей базе нет такого адреса. Поправим позже.")
                     await MenuButton.start_ml.finish()
@@ -256,50 +256,58 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     data['metro_time_log'] = np.log(metro_time)
 
                 dictionary = dictionary['display_name'].split(', ')
-
+                print(dictionary)
                 for i in range(len(dictionary)):
                     if ("район " in dictionary[i]) or (" район" in dictionary[i]):
                         district = dictionary[i]
                         break
+                    if ('Тропарёво-Никулино' in dictionary[i]):
+                        district = 'район Тропарёво-Никулино'
+                        break
+                try:
+                    district = district.split("район")[1].strip()
+                    district = district.replace('ё', 'е')
+                    df_1 = pd.read_csv('DISTRICT.csv')
+                    df_1 = df_1[columns_1]
+                    df_1_dict = dict(df_1)
 
-                district = district.split("район")[1].strip()
-                df_1 = pd.read_csv('DISTRICT.csv')
-                df_1 = df_1[columns_1]
-                df_1_dict = dict(df_1)
 
-                for i in range(len(df_1_dict['Название района'])):
-                    if district in df_1_dict['Название района'][i]:
-                        oper = i
 
-                for i in range(len(columns_1_0)):
+                    for i in range(len(df_1_dict['Название района'])):
+                        if district in df_1_dict['Название района'][i]:
+                            oper = i
+
+                    for i in range(len(columns_1_0)):
+                        async with state.proxy() as data:
+                            data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
+
+                    df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+                    df_2_dict = dict(df_2)
+
+                    for i in range(len(df_2_dict['district'])):
+                        if district in df_2_dict['district'][i]:
+                            oper = i
+
+                    for i in range(len(columns_2_0)):
+                        async with state.proxy() as data:
+                            data[columns_2_0[i]] = df_2_dict[columns_2_0[i]][oper]
+
                     async with state.proxy() as data:
-                        data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
+                        data['mpa'] = df_2_dict['mpa'][oper]
 
-                df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
-                df_2_dict = dict(df_2)
+                        await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
+предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
+                        await message.answer("Укажите коммисию", reply_markup=comissions)
 
-                for i in range(len(df_2_dict['district'])):
-                    if district in df_2_dict['district'][i]:
-                        oper = i
-
-                for i in range(len(columns_2_0)):
-                    async with state.proxy() as data:
-                        data[columns_2_0[i]] = df_2_dict[columns_2_0[i]][oper]
-
-                async with state.proxy() as data:
-                    data['mpa'] = df_2_dict['mpa'][oper]
-
-
-
-                await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
- предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
-                await message.answer("Укажите коммисию", reply_markup=comissions)
+                except UnboundLocalError:
+                    await message.answer("*Район не определен*", parse_mode="Markdown", reply_markup=menu_first)
+                    await state.finish()
 
             else:
                 dist_kreml = distance.distance(house_coord, coord_kreml).km
                 azimut = answr.get_azimuth(dictionary['lat'], dictionary['lon'])
 
-                if dist_kreml > 25:
+                if dist_kreml > 20:
                     await message.answer("По указанному адресу найдена квартира за пределами МКАД.\n\nВозможные причины:\n"
                                          "1. Данный адрес находится не в Москве.\n2. В моей базе нет такого адреса. Поправим позже.")
                     await MenuButton.start_ml.finish()
@@ -341,44 +349,55 @@ async def get_adress_info(message: types.Message, state: FSMContext):
 
 
                 dictionary = dictionary['display_name'].split(', ')
+                print(dictionary)
 
                 for i in range(len(dictionary)):
                     if ("район " in dictionary[i]) or (" район" in dictionary[i]):
                         district = dictionary[i]
                         break
 
-                district = district.split("район")[1].strip()
-                df_1 = pd.read_csv('DISTRICT.csv')
-                df_1 = df_1[columns_1]
-                df_1_dict = dict(df_1)
+                    if ('Тропарёво-Никулино' in dictionary[i]):
+                        district = 'район Тропарёво-Никулино'
+                        break
 
-                for i in range(len(df_1_dict['Название района'])):
-                    if district in df_1_dict['Название района'][i]:
-                        oper = i
+                try:
+                    district = district.split("район")[1].strip()
+                    district = district.replace('ё', 'е')
+                    df_1 = pd.read_csv('DISTRICT.csv')
+                    df_1 = df_1[columns_1]
+                    df_1_dict = dict(df_1)
 
-                for i in range(len(columns_1_0)):
+
+                    for i in range(len(df_1_dict['Название района'])):
+                        if district in df_1_dict['Название района'][i]:
+                            oper = i
+
+                    for i in range(len(columns_1_0)):
+                        async with state.proxy() as data:
+                            data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
+
+                    df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+                    df_2_dict = dict(df_2)
+
+                    for i in range(len(df_2_dict['district'])):
+                        if district in df_2_dict['district'][i]:
+                            oper = i
+
+                    for i in range(len(columns_2_0)):
+                        async with state.proxy() as data:
+                            data[columns_2_0[i]] = df_2_dict[columns_2_0[i]][oper]
+
                     async with state.proxy() as data:
-                        data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
+                        data['mpa'] = df_2_dict['mpa'][oper]
 
-                df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
-                df_2_dict = dict(df_2)
-
-                for i in range(len(df_2_dict['district'])):
-                    if district in df_2_dict['district'][i]:
-                        oper = i
-
-                for i in range(len(columns_2_0)):
-                    async with state.proxy() as data:
-                        data[columns_2_0[i]] = df_2_dict[columns_2_0[i]][oper]
-
-                async with state.proxy() as data:
-                    data['mpa'] = df_2_dict['mpa'][oper]
-
-
-                await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
+                    await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
 предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
-                # time.sleep(5)
-                await message.answer("Укажите коммисию", reply_markup=comissions)
+
+                    await message.answer("Укажите коммисию", reply_markup=comissions)
+
+                except UnboundLocalError:
+                    await message.answer("*Район не определен*", parse_mode="Markdown", reply_markup=menu_first)
+                    await state.finish()
 
         except AttributeError:
             await message.answer('Адрес не найден. Повторите ввод')
@@ -575,7 +594,7 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
         data['square_log'] = float(square[0])
         data['floor_log'] = np.log(float(square[1]) + 1e-7)
         data['built_house'] = float(square[2])
-        data['mpa'] = (data['mpa'] / 40) * float(square[0]) * 1.2
+        data['mpa'] = (data['mpa'] / 40) * float(square[0])
 
 
 
@@ -584,7 +603,7 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
 
     df = df.append(data.as_dict(), ignore_index=True)
     df = df[columns]
-    df.to_excel('{}.xlsx'.format(message.from_user.username), index=False)
+    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index=False)
 
     await state.finish()
     await message.answer("Информация получена! Ожидайте")
@@ -593,4 +612,8 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
     await message.answer(f"*Decision Tree O(1): {ans[0]} руб.\n"
                          f"Decision Tree O(N  log N): {ans[1]} руб.\n"
                          f"AdaDecision Tree O(1): No solution.\n"
-                         f"Mean for all model: {round(np.mean(ans), 0)}*", parse_mode='Markdown', reply_markup=menu_first)
+                         f"Bagging Tree O(10N log N): {ans[2]}\n"
+                         f"Bagging Tree O(50N log N): {ans[3]}\n"
+                         f"Bagging Tree O(100N log N): {ans[4]}\n"
+                         f"Mean for all model: {round(np.mean(ans), 0)}\n"
+                         f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)}*", parse_mode='Markdown', reply_markup=menu_first)

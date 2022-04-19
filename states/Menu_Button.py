@@ -9,3 +9,5 @@ class MenuButton(StatesGroup):
     start_ml = State()
     start_info_for_ml = State()
     start_interactive = State()
+    start_info_for_ml_cian = State()
+

@@ -50,12 +50,12 @@ class Preprocessing:
     def __init__(self):
         pass
 
-    def __read_csv(self):
+    def __read_csv(self, name):
         """
         Читаем необработанный фрейм с квартирами
         """
 
-        self.__df = pd.read_csv('DataFrameFlat.csv')
+        self.__df = pd.read_csv(name)
 
         return self.__df
 
@@ -154,18 +154,24 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__year_house = list(self.__df['Построен'])
-        self.__house_year = list(self.__df['Год постройки'])
+        try:
+            self.__year_house = list(self.__df['Построен'])
+            self.__house_year = list(self.__df['Год постройки'])
 
-        for i in range(self.__df['Построен'].shape[0]):
-            if self.__year_house[i] == self.__house_year[i]:
-                pass
+            for i in range(self.__df['Построен'].shape[0]):
+                if self.__year_house[i] == self.__house_year[i]:
+                    pass
 
-            else:
-                self.__year_house[i] = self.__house_year[i]
+                else:
+                    self.__year_house[i] = self.__house_year[i]
 
-        self.__df['built_house'] = self.__year_house
+            self.__df['built_house'] = self.__year_house
 
+        except KeyError:
+            try:
+                self.__df['built_house'] = self.__df['Год Построен']
+            except KeyError:
+                self.__df['built_house'] = self.__df['Год постройки']
         return self.__df
 
     def __separation_bathroom(self, df):
@@ -174,23 +180,26 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__bathroom_list = list(self.__df['Санузел'])
-        self.__separation_bathroom = []
+        try:
+            self.__bathroom_list = list(self.__df['Санузел'])
+            self.__separation_bathroom = []
 
-        for i in range(len(self.__bathroom_list)):
-            try:
-                digit_list = re.findall(r'\d+', self.__bathroom_list[i])
+            for i in range(len(self.__bathroom_list)):
+                try:
+                    digit_list = re.findall(r'\d+', self.__bathroom_list[i])
 
-                if len(digit_list) == 2:
-                    self.__separation_bathroom.append(int(digit_list[0]) + int(digit_list[1]))
+                    if len(digit_list) == 2:
+                        self.__separation_bathroom.append(int(digit_list[0]) + int(digit_list[1]))
 
-                else:
-                    self.__separation_bathroom.append(int(digit_list[0]))
+                    else:
+                        self.__separation_bathroom.append(int(digit_list[0]))
 
-            except TypeError:
-                self.__separation_bathroom.append(1)
+                except TypeError:
+                    self.__separation_bathroom.append(1)
 
-        self.__df['bathroom'] = self.__separation_bathroom
+            self.__df['bathroom'] = self.__separation_bathroom
+        except KeyError:
+            self.__df['bathroom'] = 0
 
         return self.__df
 
@@ -200,27 +209,31 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__lift_list = list(self.__df['Лифты'])
-        self.__summ_lift = []
+        try:
+            self.__lift_list = list(self.__df['Лифты'])
+            self.__summ_lift = []
 
-        for i in range(len(self.__lift_list)):
+            for i in range(len(self.__lift_list)):
 
-            try:
-                self.__digit_list = re.findall(r'\d+', self.__lift_list[i])
+                try:
+                    self.__digit_list = re.findall(r'\d+', self.__lift_list[i])
 
-                if len(self.__digit_list) == 2:
-                    self.__summ_lift.append(int(self.__digit_list[0]) + int(self.__digit_list[1]))
+                    if len(self.__digit_list) == 2:
+                        self.__summ_lift.append(int(self.__digit_list[0]) + int(self.__digit_list[1]))
 
-                if len(self.__digit_list) == 1:
-                    self.__summ_lift.append(int(self.__digit_list[0]))
+                    if len(self.__digit_list) == 1:
+                        self.__summ_lift.append(int(self.__digit_list[0]))
 
-                if len(self.__digit_list) == 0:
+                    if len(self.__digit_list) == 0:
+                        self.__summ_lift.append(int(1))
+
+                except TypeError:
                     self.__summ_lift.append(int(1))
 
-            except TypeError:
-                self.__summ_lift.append(int(1))
+            self.__df['elevators'] = self.__summ_lift
+        except KeyError:
+            self.__df['elevators'] = 0
 
-        self.__df['elevators'] = self.__summ_lift
 
         return self.__df
 
@@ -246,25 +259,28 @@ class Preprocessing:
         """
         Считаем суммы балконов
         """
+        try:
+            self.__df = df
+            self.__balkon_list = list(self.__df['Балкон/лоджия'])
+            self.__sum_balkon = []
 
-        self.__df = df
-        self.__balkon_list = list(self.__df['Балкон/лоджия'])
-        self.__sum_balkon = []
+            for i in range(len(self.__balkon_list)):
+                try:
+                    self.__digit_list = re.findall(r'\d+', self.__balkon_list[i])
 
-        for i in range(len(self.__balkon_list)):
-            try:
-                self.__digit_list = re.findall(r'\d+', self.__balkon_list[i])
+                    if len(self.__digit_list) == 2:
+                        self.__sum_balkon.append(int(self.__digit_list[0]) + int(self.__digit_list[1]))
 
-                if len(self.__digit_list) == 2:
-                    self.__sum_balkon.append(int(self.__digit_list[0]) + int(self.__digit_list[1]))
+                    else:
+                        self.__sum_balkon.append(int(self.__digit_list[0]))
 
-                else:
-                    self.__sum_balkon.append(int(self.__digit_list[0]))
+                except TypeError:
+                    self.__sum_balkon.append(int(0))
 
-            except TypeError:
-                self.__sum_balkon.append(int(0))
+            self.__df['balcony'] = self.__sum_balkon
 
-        self.__df['balcony'] = self.__sum_balkon
+        except KeyError:
+            self.__df['balcony'] = 0
 
         return self.__df
 
@@ -274,6 +290,10 @@ class Preprocessing:
         """
 
         self.__df = df
+        if str(self.__df['house'][0]).isdigit() and self.__df.shape[0] == 1:
+            return self.__df
+
+
         self.__df['house'].fillna('10', inplace=True)
         self.__house_list = list(self.__df['house'])
         self.__house_list_ready = []
@@ -313,14 +333,45 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__df['built_house'] = self.__df['built_house'].fillna(self.__df['built_house'].median())
-        self.__df['repair_flat'] = self.__df['Ремонт'].fillna('Косметический')
-        self.__df['view_outside'] = self.__df['Вид из окон'].fillna('На улицу')
-        self.__df['type_house'] = self.__df['Тип дома'].fillna('Монолитный')
-        self.__df['parking'] = self.__df['Парковка'].fillna('Открытая')
-        self.__df['metro_time'] = self.__df['metro_time'].fillna(self.__df['metro_time'].median())
-        self.__df['Залог'] = np.where((self.__df['Залог'] != 0), 1, self.__df['Залог'])
-        self.__df['Наличие мебели'] = self.__df['Мебель в комнатах']
+        try:
+            self.__df['built_house'] = self.__df['built_house'].fillna(self.__df['built_house'].median())
+        except KeyError:
+            self.__df['built_house'] = 1990
+
+        try:
+            self.__df['repair_flat'] = self.__df['Ремонт'].fillna('Косметический')
+        except KeyError:
+            self.__df['repair_flat'] = 'Косметический'
+
+        try:
+            self.__df['view_outside'] = self.__df['Вид из окон'].fillna('На улицу')
+        except KeyError:
+            self.__df['view_outside'] = 'На улицу'
+
+        try:
+            self.__df['type_house'] = self.__df['Тип дома'].fillna('Монолитный')
+        except KeyError:
+            self.__df['type_house'] = 'Панельный'
+
+        try:
+            self.__df['parking'] = self.__df['Парковка'].fillna('Открытая')
+        except KeyError:
+            self.__df['parking'] = 'Открытая'
+
+        try:
+            self.__df['metro_time'] = self.__df['metro_time'].fillna(self.__df['metro_time'].median())
+        except KeyError:
+            self.__df['metro_time'] = 10
+
+        try:
+            self.__df['Залог'] = np.where((self.__df['Залог'] != 0), 1, self.__df['Залог'])
+        except KeyError:
+            self.__df['Залог'] = 0
+
+        try:
+            self.__df['Наличие мебели'] = self.__df['Мебель в комнатах']
+        except KeyError:
+            self.__df['Наличие мебели'] = 0
 
         return self.__df
 
@@ -335,6 +386,9 @@ class Preprocessing:
         'Рестораны / кафе быстрого питания','Продовольственные магазины', 'Городские парки развлечений, аттракционов','Аптеки по продаже лекарств',
         'Маммологические центры, больницы, клиники, поликлиники','Фитнес-клубы, центры, залы']]
         self.__df = self.__df.merge(self.__df_1, left_on="district", right_on="Название района")
+
+        self.__df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+        self.__df = self.__df.merge(self.__df_2, left_on="district", right_on="district")
 
         return self.__df
 
@@ -426,14 +480,13 @@ class Preprocessing:
 
         return self.__data
 
-    def __standart_after_preprocessing(self, df):
+    def __standart_after_preprocessing(self, df, modified: bool = False):
         """
         Удаляем лишние колонки
         """
 
         self.__df = df
-
-        self.__df = self.__df.drop(['city','okrug','street', 'house','Тип жилья', 'Предоплата', 'Мебель на кухне', 'Мебель в комнатах',
+        columns = ['city','okrug','street', 'house','Тип жилья', 'Предоплата', 'Мебель на кухне', 'Мебель в комнатах',
                                     'Залог',
                  'Площадь комнат+ обозначение смежных комнат- обозначение изолированных комнат',
                  'Высота потолков','Санузел','Ремонт','bathroom', 'Душевая кабина', 'Стиральная машина', 'Посудомоечная машина', 'Холодильник',
@@ -444,8 +497,28 @@ class Preprocessing:
                 'Тип перекрытий',
                 'Лифты','Мусоропровод','type_of_housing','repair_flat','view_outside','type_house', 'type_house_Старый фонд', 'type_house_Сталинский',
                                     'type_house_Деревянный', 'repair_flat_Без ремонта',
-                'parking', 'parking_Многоуровневая', 'elevators', 'circle', 'flat_name', 'Название района', 'Количество спальных мест'], axis=1)
+                'parking', 'parking_Многоуровневая', 'elevators', 'circle', 'flat_name', 'Название района', 'Количество спальных мест']
+        if modified:
+            self.__df = self.__df.drop(columns, axis=1)
+        else:
 
+            for col in columns:
+                if col in self.__df.columns:
+                    self.__df = self.__df.drop(col, axis = 1)
+
+            columns_ = ['repair_flat_Дизайнерский',
+       'repair_flat_Евроремонт', 'repair_flat_Косметический',
+       'view_outside_Во двор', 'view_outside_На улицу',
+       'view_outside_На улицу и двор', 'type_house_Блочный',
+       'type_house_Кирпичный', 'type_house_Монолитно кирпичный',
+       'type_house_Монолитный', 'type_house_Панельный', 'parking_Наземная',
+       'parking_Открытая', 'parking_Подземная', 'circle_3 Транспортное',
+       'circle_Бульварное', 'circle_В пределах МКАД', 'circle_За МКАД',
+       'circle_Садовое']
+
+            for col in columns_:
+                if col not in self.__df.columns:
+                    self.__df[col] = 0
         return self.__df
 
     def __append_azimut(self, df):
@@ -460,12 +533,12 @@ class Preprocessing:
 
 
 
-    def run_preprocessing_script(self):
+    def run_preprocessing_script(self, save: bool, name, modified = True):
         """
         Запуск скрипта
         """
 
-        self.__df = self.__read_csv()
+        self.__df = self.__read_csv(name)
         self.__df = self.__append_square_flat(self.__df)[0]
         self.__df = self.__append_count_room(self.__df, self.__append_square_flat(self.__df)[1])
         self.__df = self.__append_type_housing(self.__df, self.__append_square_flat(self.__df)[1])
@@ -482,12 +555,12 @@ class Preprocessing:
         self.__df = self.__dist_kreml(self.__df)
         self.__df = self.__circle(self.__df)
         self.__df = self.__get_dummy(self.__df)
-        # self.__data = self.__data_df(self.__df)
-        self.__df = self.__standart_after_preprocessing(self.__df)
         self.__df = self.__append_azimut(self.__df)
-        self.__df.to_excel('DataFrame_after_preprocessing.xlsx', index = False)
-        # self.__data.to_excel('Value_after_preprocessing.xlsx', index = False)
-        self.__df.to_csv('DataFrame_after_preprocessing.csv', index = False)
-        # self.__data.to_csv('Value_after_preprocessing.csv', index = False)
+        self.__df = self.__standart_after_preprocessing(self.__df, modified=modified)
+        if not save:
+            return self.__df
+        if save:
+            self.__df.to_excel('DataFrame_after_preprocessing.xlsx', index = False)
+            self.__df.to_csv('DataFrame_after_preprocessing.csv', index = False)
 
     
