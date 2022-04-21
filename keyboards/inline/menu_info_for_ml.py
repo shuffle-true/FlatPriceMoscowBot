@@ -21,7 +21,7 @@ comissions = InlineKeyboardMarkup(row_width=2,
                                      InlineKeyboardButton(text="0 - 20%",
                                                           callback_data=choice_callback.new(name="comissions", count=10)),
                                      InlineKeyboardButton(text="20 - 50%",
-                                                          callback_data=choice_callback.new(name="comissions", count=50))
+                                                          callback_data=choice_callback.new(name="comissions", count=40))
                                  ],
                                  [
                                      InlineKeyboardButton(text="50 - 80%",
@@ -184,7 +184,7 @@ type_of_parking = InlineKeyboardMarkup(row_width=2,
 mebel_room = InlineKeyboardMarkup(row_width=2,
                              inline_keyboard=[
                                  [
-                                     InlineKeyboardButton(text="Мебель в есть",
+                                     InlineKeyboardButton(text="Мебель есть",
                                                           callback_data=choice_callback.new(name="mebel_room", count=0)),
                                      InlineKeyboardButton(text="Отсутствует",
                                                           callback_data=choice_callback.new(name="mebel_room", count=1)),
@@ -208,7 +208,7 @@ mebel_kitchen = InlineKeyboardMarkup(row_width=2,
 balcony = InlineKeyboardMarkup(row_width=2,
                             inline_keyboard = [
                                                   [
-                                                      InlineKeyboardButton(text="Да, балкон есть",
+                                                      InlineKeyboardButton(text="Имеется",
                                                                            callback_data=choice_callback.new(name="balcony", count=0)),
                                                       InlineKeyboardButton(text="Отсутствует",
                                                                            callback_data=choice_callback.new(name="balcony", count=1)),

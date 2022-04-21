@@ -1,4 +1,6 @@
 ﻿# модули для корректного обращения к API бота
+import time
+
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove, CallbackQuery
 from aiogram.dispatcher import FSMContext
@@ -35,7 +37,7 @@ import math
 
 # модули содержащие доп информацию
 from data.all_config import columns, columns_1, columns_1_0, columns_2_0, columns_2
-from .lol import answer_ml
+from .lol import answer_ml, random_fact, available_district
 from .ml_predict import predict
 
 from typing import Dict, List
@@ -295,12 +297,108 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                        await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
-предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
+                        await message.answer("""*Для прогнозирования требуется некоторая информация о квартире.*""", parse_mode="Markdown")
                         await message.answer("Укажите коммисию", reply_markup=comissions)
 
                 except UnboundLocalError:
-                    await message.answer("*Район не определен*", parse_mode="Markdown", reply_markup=menu_first)
+                    await message.answer("*Район не определен\n\nСписок доступных районов*", parse_mode="Markdown")
+                    await message.answer("*Алексеевский\n"
+                                         "Алтуфьевский\n"
+                                         "Арбат\n"
+                                         "Аэропорт\n"
+                                         "Бабушкинский\n"
+                                         "Басманный\n"
+                                         "Беговой\n"
+                                         "Бескудниковский\n"
+                                         "Бибирево\n"
+                                         "Богородское\n"
+                                         "Братеево\n"
+                                         "Бутырский\n"
+                                         "Вешняки\n"
+                                         "Внуково\n"
+                                         "Войковский\n"
+                                         "Восточный\n"
+                                         "Выхино-Жулебино\n"
+                                         "Гагаринский\n"
+                                         "Головинский\n"
+                                         "Гольяново\n"
+                                         "Даниловский\n"
+                                         "Дмитровский\n"
+                                         "Донской\n"
+                                         "Дорогомилово\n"
+                                         "Замоскворечье\n"
+                                         "Зюзино\n"
+                                         "Зябликово\n"
+                                         "Ивановское\n"
+                                         "Измайлово\n"
+                                         "Капотня\n"
+                                         "Коньково\n"
+                                         "Коптево\n"
+                                         "Косино-Ухтомский\n"
+                                         "Котловка\n"
+                                         "Красносельский\n"
+                                         "Крылатское\n"
+                                         "Крюково\n"
+                                         "Кузьминки\n"
+                                         "Кунцево\n"
+                                         "Куркино\n"
+                                         "Левобережный\n"
+                                         "Лефортово\n"
+                                         "Лианозово\n"
+                                         "Ломоносовский\n"
+                                         "Лосиноостровский\n"
+                                         "Люблино\n"
+                                         "Марфино\n"
+                                         "Марьино\n"
+                                         "Матушкино\n"
+                                         "Метрогородок\n"
+                                         "Мещанский\n"
+                                         "Митино\n"
+                                         "Можайский\n"
+                                         "Молжаниновский\n"
+                                         "Москворечье-Сабурово\n"
+                                         "Нагатино-Садовники\n"
+                                         "Нагорный\n"
+                                         "Некрасовка\n"
+                                         "Нижегородский\n"
+                                         "Новогиреево\n"
+                                         "Новокосино\n"
+                                         "Обручевский\n"
+                                         "Останкинский\n"
+                                         "Отрадное\n"
+                                         "Очаково-Матвеевское\n"
+                                         "Перово Печатники\n"
+                                         "Покровское-Стрешнево\n"
+                                         "Преображенское\n"
+                                         "Пресненский\n"
+                                         "Проспект Вернадского\n"
+                                         "Раменки\n"
+                                         "Ростокино\n"
+                                         "Рязанский\n"
+                                         "Савёлки\n"
+                                         "Свиблово\n"
+                                         "Северный\n"
+                                         "Силино\n"
+                                         "Сокол\n"
+                                         "Соколиная Гора\n"
+                                         "Сокольники\n"
+                                         "Солнцево\n"
+                                         "Строгино\n"
+                                         "Таганский\n"
+                                         "Тверской\n"
+                                         "Текстильщики\n"
+                                         "Тимирязевский\n"
+                                         "Тропарево-Никулино\n"
+                                         "Фили-Давыдково\n"
+                                         "Хамовники\n"
+                                         "Ховрино\n"
+                                         "Хорошевский\n"
+                                         "Царицыно\n"
+                                         "Щукино\n"
+                                         "Южнопортовый\n"
+                                         "Якиманка\n"
+                                         "Ярославский\n"
+                                         "Ясенево*", reply_markup=menu_first, parse_mode="Markdown")
                     await state.finish()
 
             else:
@@ -390,13 +488,110 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                    await message.answer("""Для прогнозирования требуется некоторая информация о квартире. \n\nСейчас вам будет 
-предложено ввести данные о мебели, этаже, наличие ванных комнат и т.д.""")
+                    await message.answer("""*Для прогнозирования требуется некоторая информация о квартире.*""", parse_mode="Markdown")
 
                     await message.answer("Укажите коммисию", reply_markup=comissions)
 
                 except UnboundLocalError:
-                    await message.answer("*Район не определен*", parse_mode="Markdown", reply_markup=menu_first)
+                    await message.answer("*Район не определен\n\nСписок доступных районов*", parse_mode="Markdown")
+                    await message.answer("*Алексеевский\n"
+                                         "Алтуфьевский\n"
+                                         "Арбат\n"
+                                         "Аэропорт\n"
+                                         "Бабушкинский\n"
+                                         "Басманный\n"
+                                         "Беговой\n"
+                                         "Бескудниковский\n"
+                                         "Бибирево\n"
+                                         "Богородское\n"
+                                         "Братеево\n"
+                                         "Бутырский\n"
+                                         "Вешняки\n"
+                                         "Внуково\n"
+                                         "Войковский\n"
+                                         "Восточный\n"
+                                         "Выхино-Жулебино\n"
+                                         "Гагаринский\n"
+                                         "Головинский\n"
+                                         "Гольяново\n"
+                                         "Даниловский\n"
+                                         "Дмитровский\n"
+                                         "Донской\n"
+                                         "Дорогомилово\n"
+                                         "Замоскворечье\n"
+                                         "Зюзино\n"
+                                         "Зябликово\n"
+                                         "Ивановское\n"
+                                         "Измайлово\n"
+                                         "Капотня\n"
+                                         "Коньково\n"
+                                         "Коптево\n"
+                                         "Косино-Ухтомский\n"
+                                         "Котловка\n"
+                                         "Красносельский\n"
+                                         "Крылатское\n"
+                                         "Крюково\n"
+                                         "Кузьминки\n"
+                                         "Кунцево\n"
+                                         "Куркино\n"
+                                         "Левобережный\n"
+                                         "Лефортово\n"
+                                         "Лианозово\n"
+                                         "Ломоносовский\n"
+                                         "Лосиноостровский\n"
+                                         "Люблино\n"
+                                         "Марфино\n"
+                                         "Марьино\n"
+                                         "Матушкино\n"
+                                         "Метрогородок\n"
+                                         "Мещанский\n"
+                                         "Митино\n"
+                                         "Можайский\n"
+                                         "Молжаниновский\n"
+                                         "Москворечье-Сабурово\n"
+                                         "Нагатино-Садовники\n"
+                                         "Нагорный\n"
+                                         "Некрасовка\n"
+                                         "Нижегородский\n"
+                                         "Новогиреево\n"
+                                         "Новокосино\n"
+                                         "Обручевский\n"
+                                         "Останкинский\n"
+                                         "Отрадное\n"
+                                         "Очаково-Матвеевское\n"
+                                         "Перово Печатники\n"
+                                         "Покровское-Стрешнево\n"
+                                         "Преображенское\n"
+                                         "Пресненский\n"
+                                         "Проспект Вернадского\n"
+                                         "Раменки\n"
+                                         "Ростокино\n"
+                                         "Рязанский\n"
+                                         "Савёлки\n"
+                                         "Свиблово\n"
+                                         "Северный\n"
+                                         "Силино\n"
+                                         "Сокол\n"
+                                         "Соколиная Гора\n"
+                                         "Сокольники\n"
+                                         "Солнцево\n"
+                                         "Строгино\n"
+                                         "Таганский\n"
+                                         "Тверской\n"
+                                         "Текстильщики\n"
+                                         "Тимирязевский\n"
+                                         "Тропарево-Никулино\n"
+                                         "Фили-Давыдково\n"
+                                         "Хамовники\n"
+                                         "Ховрино\n"
+                                         "Хорошевский\n"
+                                         "Царицыно\n"
+                                         "Щукино\n"
+                                         "Южнопортовый\n"
+                                         "Южнопортовый\n"
+                                         "Якиманка\n"
+                                         "Ярославский\n"
+                                         "Ясенево*", reply_markup=menu_first, parse_mode="Markdown")
                     await state.finish()
 
         except AttributeError:
@@ -412,7 +607,7 @@ async def get_comissions(call: CallbackQuery, callback_data: dict, state: FSMCon
     async with state.proxy() as data:
         data['Комиссия'] = float(callback_data["count"])
 
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите кол-во комнат.",
+    await call.message.answer(f"Укажите кол-во комнат.",
                               reply_markup=count_room)
 
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
@@ -422,7 +617,7 @@ async def get_comissions(call: CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(choice_callback.filter(name="room"), state = [MenuButton.start_ml])
 async def get_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nКакой в квартире ремонт?", reply_markup = type_of_repair)
+    await call.message.answer(f"Какой в квартире ремонт?", reply_markup = type_of_repair)
 
     async with state.proxy() as data:
         data['count_room'] = float(callback_data["count"])
@@ -434,7 +629,7 @@ async def get_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_repair"), state = [MenuButton.start_ml])
 async def get_type_of_repair(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nКуда выходят окна?", reply_markup = view_window)
+    await call.message.answer(f"Куда выходят окна?", reply_markup = view_window)
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
@@ -457,7 +652,7 @@ async def get_type_of_repair(call: CallbackQuery, callback_data: dict, state: FS
 
 @dp.callback_query_handler(choice_callback.filter(name="view_window"), state = [MenuButton.start_ml])
 async def get_view_window(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nВыберите тип дома", reply_markup = type_of_house)
+    await call.message.answer(f"Выберите тип дома", reply_markup = type_of_house)
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
@@ -480,7 +675,9 @@ async def get_view_window(call: CallbackQuery, callback_data: dict, state: FSMCo
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_house"), state = [MenuButton.start_ml])
 async def get_type_of_house(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nВыберите тип парковки", reply_markup = type_of_parking)
+    await call.message.answer(f"Выберите тип парковки ->\n\n*Открытая - парковка на придомовой территории.\nНаземная - охраняемая парковка возле дома.*",
+                              reply_markup = type_of_parking,
+                              parse_mode="Markdown")
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
@@ -516,7 +713,7 @@ async def get_type_of_house(call: CallbackQuery, callback_data: dict, state: FSM
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_parking"), state = [MenuButton.start_ml])
 async def get_type_of_parking(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\nУкажите наличие мебели в комнатах",
+    await call.message.answer(f"Укажите наличие мебели в комнатах",
                               reply_markup=mebel_room)
 
     if callback_data["count"] == '2':
@@ -541,8 +738,7 @@ async def get_type_of_parking(call: CallbackQuery, callback_data: dict, state: F
 
 @dp.callback_query_handler(choice_callback.filter(name="mebel_room"), state = [MenuButton.start_ml])
 async def get_mebel_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}"
-                              f"\n\nУкажите наличие балкона", reply_markup=balcony)
+    await call.message.answer(f"Укажите наличие балкона", reply_markup=balcony)
     if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['Наличие мебели'] = float(1)
@@ -559,8 +755,7 @@ async def get_mebel_room(call: CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(choice_callback.filter(name="balcony"), state = [MenuButton.start_ml])
 async def get_balcony(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}"
-                              f"\n\nВведите площадь (можно примерную) квартиры, этаж и год постройки "
+    await call.message.answer(f"Введите площадь (можно примерную) квартиры, этаж и год постройки "
                               f"дома через пробел. \n\nПример:\n52 12 2016",
                               reply_markup=ReplyKeyboardRemove())
 
@@ -608,7 +803,13 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
     await state.finish()
     await message.answer("Информация получена! Ожидайте")
 
+
+
     ans = predict(message.from_user.username)
+    await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
+
+    time.sleep(4)
+
     await message.answer(f"*Decision Tree O(1): {ans[0]} руб.\n"
                          f"Decision Tree O(N  log N): {ans[1]} руб.\n"
                          f"AdaDecision Tree O(1): No solution.\n"

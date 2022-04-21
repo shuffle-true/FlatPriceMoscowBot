@@ -6,9 +6,9 @@ menu_first = ReplyKeyboardMarkup(
         [
             KeyboardButton(text = "Узнать аренду квартиры! 🤪")
         ],
-        [
-            KeyboardButton(text="Интерактивчик 😐")
-        ],
+        # [
+        #     KeyboardButton(text="Интерактивчик 😐")
+        # ],
         [
             KeyboardButton(text="Как мною пользоваться?")
         ],

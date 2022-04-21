@@ -2,6 +2,8 @@ import time
 
 import pandas as pd
 from aiogram import types
+
+from handlers.users.ml.lol import answer_ml, random_fact
 from loader import dp
 from states import MenuButton
 from aiogram.dispatcher import FSMContext
@@ -17,6 +19,7 @@ from handlers.users.dataframe.dataframe_preprocessing import Preprocessing
 from handlers.users.ml.ml_predict import predict
 from data.all_config import columns
 
+from numpy import random as rnd
 
 
 @dp.message_handler(text = "Ссылка на Циан")
@@ -80,7 +83,9 @@ async def get_link_cian(message: types.Message, state: FSMContext):
 
         ans = predict(message.from_user.id)
 
-        time.sleep(2)
+        await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
+
+        time.sleep(4)
         await message.answer(f"*Decision Tree O(1): {ans[0]} руб.\n"
                              f"Decision Tree O(N  log N): {ans[1]} руб.\n"
                              f"AdaDecision Tree O(1): No solution.\n"
