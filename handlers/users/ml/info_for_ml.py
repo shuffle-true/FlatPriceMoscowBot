@@ -367,7 +367,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                                          "Останкинский\n"
                                          "Отрадное\n"
                                          "Очаково-Матвеевское\n"
-                                         "Перово Печатники\n"
+                                         "Перово\n"
+                                         "Печатники\n"
                                          "Покровское-Стрешнево\n"
                                          "Преображенское\n"
                                          "Пресненский\n"
@@ -559,7 +560,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                                          "Останкинский\n"
                                          "Отрадное\n"
                                          "Очаково-Матвеевское\n"
-                                         "Перово Печатники\n"
+                                         "Перово\n"
+                                         "Печатники\n"
                                          "Покровское-Стрешнево\n"
                                          "Преображенское\n"
                                          "Пресненский\n"
@@ -808,13 +810,12 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
     ans = predict(message.from_user.username)
     await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
-    time.sleep(4)
+    time.sleep(5)
 
     await message.answer(f"*Decision Tree O(1): {ans[0]} руб.\n"
                          f"Decision Tree O(N  log N): {ans[1]} руб.\n"
-                         f"AdaDecision Tree O(1): No solution.\n"
-                         f"Bagging Tree O(10N log N): {ans[2]}\n"
-                         f"Bagging Tree O(50N log N): {ans[3]}\n"
-                         f"Bagging Tree O(100N log N): {ans[4]}\n"
-                         f"Mean for all model: {round(np.mean(ans), 0)}\n"
-                         f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)}*", parse_mode='Markdown', reply_markup=menu_first)
+                         f"Bagging Tree O(10N log N): {ans[2]} руб.\n"
+                         f"Bagging Tree O(50N log N): {ans[3]} руб.\n"
+                         f"Bagging Tree O(100N log N): {ans[4]} руб.\n"
+                         f"Mean for all model: {round(np.mean(ans), 0)} руб.\n"
+                         f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)} руб.*", parse_mode='Markdown', reply_markup=menu_first)
