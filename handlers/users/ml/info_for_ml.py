@@ -297,8 +297,8 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                        await message.answer("""*Для прогнозирования требуется некоторая информация о квартире.*""", parse_mode="Markdown")
-                        await message.answer("Укажите коммисию", reply_markup=comissions)
+                        await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""")
+                        await message.answer("*Укажите коммисию*", reply_markup=comissions, parse_mode="Markdown")
 
                 except UnboundLocalError:
                     await message.answer("*Район не определен\n\nСписок доступных районов*", parse_mode="Markdown")
@@ -489,9 +489,9 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                    await message.answer("""*Для прогнозирования требуется некоторая информация о квартире.*""", parse_mode="Markdown")
+                    await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""")
 
-                    await message.answer("Укажите коммисию", reply_markup=comissions)
+                    await message.answer("*Укажите коммисию*", reply_markup=comissions, parse_mode="Markdown")
 
                 except UnboundLocalError:
                     await message.answer("*Район не определен\n\nСписок доступных районов*", parse_mode="Markdown")
@@ -609,8 +609,8 @@ async def get_comissions(call: CallbackQuery, callback_data: dict, state: FSMCon
     async with state.proxy() as data:
         data['Комиссия'] = float(callback_data["count"])
 
-    await call.message.answer(f"Укажите кол-во комнат.",
-                              reply_markup=count_room)
+    await call.message.answer(f"*Укажите кол-во комнат.*",
+                              reply_markup=count_room, parse_mode="Markdown")
 
     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
         await call.message.delete()
@@ -619,7 +619,7 @@ async def get_comissions(call: CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(choice_callback.filter(name="room"), state = [MenuButton.start_ml])
 async def get_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Какой в квартире ремонт?", reply_markup = type_of_repair)
+    await call.message.answer(f"*Какой в квартире ремонт?*", reply_markup = type_of_repair, parse_mode="Markdown")
 
     async with state.proxy() as data:
         data['count_room'] = float(callback_data["count"])
@@ -631,7 +631,7 @@ async def get_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_repair"), state = [MenuButton.start_ml])
 async def get_type_of_repair(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Куда выходят окна?", reply_markup = view_window)
+    await call.message.answer(f"*Куда выходят окна?*", reply_markup = view_window, parse_mode="Markdown")
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
@@ -654,7 +654,7 @@ async def get_type_of_repair(call: CallbackQuery, callback_data: dict, state: FS
 
 @dp.callback_query_handler(choice_callback.filter(name="view_window"), state = [MenuButton.start_ml])
 async def get_view_window(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Выберите тип дома", reply_markup = type_of_house)
+    await call.message.answer(f"*Выберите тип дома*", reply_markup = type_of_house, parse_mode="Markdown")
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
@@ -715,8 +715,8 @@ async def get_type_of_house(call: CallbackQuery, callback_data: dict, state: FSM
 
 @dp.callback_query_handler(choice_callback.filter(name="type_of_parking"), state = [MenuButton.start_ml])
 async def get_type_of_parking(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Укажите наличие мебели в комнатах",
-                              reply_markup=mebel_room)
+    await call.message.answer(f"*Укажите наличие мебели в комнатах*",
+                              reply_markup=mebel_room, parse_mode="Markdown")
 
     if callback_data["count"] == '2':
         async with state.proxy() as data:
@@ -740,7 +740,7 @@ async def get_type_of_parking(call: CallbackQuery, callback_data: dict, state: F
 
 @dp.callback_query_handler(choice_callback.filter(name="mebel_room"), state = [MenuButton.start_ml])
 async def get_mebel_room(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Укажите наличие балкона", reply_markup=balcony)
+    await call.message.answer(f"*Укажите наличие балкона*", reply_markup=balcony, parse_mode="Markdown")
     if callback_data["count"] == '0':
         async with state.proxy() as data:
             data['Наличие мебели'] = float(1)
@@ -757,9 +757,9 @@ async def get_mebel_room(call: CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(choice_callback.filter(name="balcony"), state = [MenuButton.start_ml])
 async def get_balcony(call: CallbackQuery, callback_data: dict, state: FSMContext):
-    await call.message.answer(f"Введите площадь (можно примерную) квартиры, этаж и год постройки "
-                              f"дома через пробел. \n\nПример:\n52 12 2016",
-                              reply_markup=ReplyKeyboardRemove())
+    await call.message.answer(f"*Введите площадь (можно примерную) квартиры, этаж и год постройки "
+                              f"дома через пробел. \n\nПример:\n52 12 2016*",
+                              reply_markup=ReplyKeyboardRemove(), parse_mode="Markdown")
 
     if callback_data["count"] == '0':
         async with state.proxy() as data:
