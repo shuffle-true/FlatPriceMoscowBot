@@ -89,7 +89,7 @@ async def get_link_cian(message: types.Message, state: FSMContext):
 
             time.sleep(4)
             await message.answer(f"*Аренда за эту квартиру составляет {round(np.mean(ans), 0)} руб.\n"
-                                 f"Я уверен в прогнозе на {round(100 - (np.var(ans) ** 0.5 / np.mean(ans)), 0)} %.*", parse_mode='Markdown',
+                                 f"Я уверен в прогнозе на {round((1 - (np.var(ans) ** 0.5 / np.mean(ans))) * 100, 0)}  %.*", parse_mode='Markdown',
                                  reply_markup=menu_first)
 
             await state.finish()
