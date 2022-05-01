@@ -88,13 +88,8 @@ async def get_link_cian(message: types.Message, state: FSMContext):
             await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
             time.sleep(4)
-            await message.answer(f"*Decision Tree O(1): {ans[0]} руб.\n"
-                                 f"Decision Tree O(N  log N): {ans[1]} руб.\n"
-                                 f"Bagging Tree O(10N log N): {ans[2]} руб.\n"
-                                 f"Bagging Tree O(50N log N): {ans[3]} руб.\n"
-                                 f"Bagging Tree O(100N log N): {ans[4]} руб.\n"
-                                 f"Mean for all model: {round(np.mean(ans), 0)} руб.\n"
-                                 f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)} руб.*", parse_mode='Markdown',
+            await message.answer(f"*Аренда за эту квартиру составляет {round(np.mean(ans), 0)} руб.\n"
+                                 f"Я уверен в прогнозе на {round(100 - (np.var(ans) ** 0.5 / np.mean(ans)), 0)} %.*", parse_mode='Markdown',
                                  reply_markup=menu_first)
 
             await state.finish()
@@ -102,4 +97,11 @@ async def get_link_cian(message: types.Message, state: FSMContext):
         await message.answer("*Распознана попытка взлома. Попытка неудачная. Я продолжаю работать.*", parse_mode="Markdown")
 
 
+# f"*Decision Tree O(1): {ans[0]} руб.\n"
+# f"Decision Tree O(N  log N): {ans[1]} руб.\n"
+# f"Bagging Tree O(10N log N): {ans[2]} руб.\n"
+# f"Bagging Tree O(50N log N): {ans[3]} руб.\n"
+# f"Bagging Tree O(100N log N): {ans[4]} руб.\n"
+# f"Mean for all model: {round(np.mean(ans), 0)} руб.\n"
+# f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)} руб.*"
 
