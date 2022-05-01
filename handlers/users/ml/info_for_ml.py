@@ -11,7 +11,7 @@ from contextlib import suppress
 from aiogram.utils.exceptions import (MessageCantBeDeleted,
                                       MessageToDeleteNotFound)
 
-from keyboards.default import menu_first
+from keyboards.default import menu_first, menu_back_from_random_state
 
 # модули для взаимодействия с пользователем
 from keyboards.inline import zalog, comissions, count_room, type_of_repair, view_window, \
@@ -195,9 +195,16 @@ class Preobras:
 @dp.message_handler(text="Самостоятельный ввод")
 async def start_get_info(message: types.Message):
     await message.answer("Введите улицу и номер дома в формате:\nЗолоторожский Вал, 11с7",
-                         reply_markup=ReplyKeyboardRemove())
+                         reply_markup=menu_back_from_random_state)
     await MenuButton.start_ml.set()
 
+
+@dp.message_handler(text="Отменить ввод", state = [MenuButton.start_ml])
+async def cancel_ml(message: types.Message, state: FSMContext):
+    await message.answer("*Вы вернулись в меню.*",
+                         reply_markup=menu_first,
+                         parse_mode="Markdown")
+    await state.finish()
 
 @dp.message_handler(state=MenuButton.start_ml)
 async def get_adress_info(message: types.Message, state: FSMContext):
