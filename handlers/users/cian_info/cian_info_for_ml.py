@@ -8,7 +8,7 @@ from loader import dp
 from states import MenuButton
 from aiogram.dispatcher import FSMContext
 import numpy as np
-from keyboards.default import menu_first
+from keyboards.default import menu_first, menu_back_from_random_state
 from aiogram.types import ReplyKeyboardRemove
 
 from handlers.users.parser.parser import Parser
@@ -25,7 +25,7 @@ from numpy import random as rnd
 @dp.message_handler(text = "Ссылка на Циан")
 async def link_cian(message: types.Message):
     await message.answer("*Я не рекомендую использовать этот способ оценки. Лучше всего вбивать параметры руками.*\n\n"
-"Пришли мне ссылку на квартиру с ЦИАНа", reply_markup = ReplyKeyboardRemove(), parse_mode="Markdown")
+"Пришли мне ссылку на квартиру с ЦИАНа", reply_markup = menu_back_from_random_state, parse_mode="Markdown")
     await MenuButton.start_info_for_ml_cian.set()
 
 @dp.message_handler(state=MenuButton.start_info_for_ml_cian)

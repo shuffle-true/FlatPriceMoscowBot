@@ -199,7 +199,7 @@ async def start_get_info(message: types.Message):
     await MenuButton.start_ml.set()
 
 
-@dp.message_handler(text="Отменить ввод", state = [MenuButton.start_ml])
+@dp.message_handler(text="Отменить ввод", state = [MenuButton.start_ml, MenuButton.start_info_for_ml_cian])
 async def cancel_ml(message: types.Message, state: FSMContext):
     await message.answer("*Вы вернулись в меню.*",
                          reply_markup=menu_first,
