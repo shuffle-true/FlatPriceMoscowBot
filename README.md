@@ -9,7 +9,7 @@ __[тут->ТЗ](https://github.com/LilPomidorLil/course_paper_1/blob/master/cou
 __[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__
 
 
-__Current Version - 1.0.0 alpha__
+__Current Version - 1.0.1__
 
 В планах по этому проекту обучить бустинг и прекратить его поддержку.
 
