@@ -46,7 +46,7 @@ async def get_link_cian(message: types.Message, state: FSMContext):
             await state.finish()
             return
 
-        await message.answer("*Информация собрана.*\n\nНачинаю подготовку данных для анализа", parse_mode="Markdown")
+        # await message.answer("*Информация собрана.*\n\nНачинаю подготовку данных для анализа", parse_mode="Markdown")
 
         df.to_csv('USER_REQUEST/{}.csv'.format(message.from_user.id), index=False)
         df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index=False)
@@ -81,13 +81,13 @@ async def get_link_cian(message: types.Message, state: FSMContext):
             df.to_csv('USER_REQUEST/{}.csv'.format(message.from_user.id), index=False)
             df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index=False)
 
-            await message.answer("*Начинаю предсказание...*", parse_mode="Markdown")
+            # await message.answer("*Начинаю предсказание...*", parse_mode="Markdown")
 
             ans = predict(message.from_user.id)
 
             await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
-            time.sleep(4)
+            time.sleep(6)
             await message.answer(f"*Аренда за эту квартиру составляет {round(np.mean(ans), 0)} руб.\n"
                                  f"Я уверен в прогнозе на {round((1 - (np.var(ans) ** 0.5 / np.mean(ans))) * 100, 0)}  %.*", parse_mode='Markdown',
                                  reply_markup=menu_first)
