@@ -6,7 +6,8 @@
 
 __[тут->ТЗ](https://github.com/LilPomidorLil/course_paper_1/blob/master/course.pdf)__
 
-__[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__
+__[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__ (_в разработке_)
+
 
 
 __Current Version - 1.0.2__
