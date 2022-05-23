@@ -10,4 +10,6 @@ class MenuButton(StatesGroup):
     start_info_for_ml = State()
     start_interactive = State()
     start_info_for_ml_cian = State()
+    get_real_target = State()
+    set_all_message = State()
 
