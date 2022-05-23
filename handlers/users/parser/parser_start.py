@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters import Command
 from .parser import Parser
 from aiogram.dispatcher import FSMContext
 from states import ParserStates
-from keyboards.default import price_button, confirm_button, menu_second, confirm_algorithm_button, confirm_pars_button
+from keyboards.default import price_button, confirm_button, menu_first, confirm_algorithm_button, confirm_pars_button
 from aiogram.types import ReplyKeyboardRemove 
 import re, math
 from data.config import admins
@@ -82,7 +82,7 @@ async  def enter_max_price(message: types.Message,state=FSMContext):
 
 @dp.message_handler(text="Отменить")
 async def cancel_start(message: types.Message):
-    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_second)
+    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_first)
 
 
 
@@ -112,7 +112,7 @@ async def confirm_start(message: types.Message):
 
 @dp.message_handler(text="Прервать")
 async def cancel_alghoritm(message: types.Message):
-    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_second)
+    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_first)
 
 
 
@@ -142,7 +142,7 @@ async def continue_alghoritm(message: types.Message, state = FSMContext):
 
 @dp.message_handler(text="Остановить машину!")
 async def cancel_parser(message: types.Message):
-    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_second)
+    await message.answer('Хорошо! \nВы будете возвращены в меню', reply_markup=menu_first)
     
 
 
