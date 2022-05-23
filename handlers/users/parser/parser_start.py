@@ -106,7 +106,7 @@ async def confirm_start(message: types.Message):
 
     count_pages = math.ceil(int(digit) / 28)
 
-    await message.answer(f'В указанном диапазоне найдено {count_pages} страниц.\nПродолжить обработку или изменить порог цены?', 
+    await message.answer(f'В указанном диапазоне найдено {count_pages} страниц.\nПродолжить обработку или прервать выполнение?',
                                                                                         reply_markup = confirm_algorithm_button)
 
 
