@@ -199,7 +199,9 @@ async def start_get_info(message: types.Message):
     await MenuButton.start_ml.set()
 
 
-@dp.message_handler(text="Отменить ввод", state = [MenuButton.start_ml, MenuButton.start_info_for_ml_cian])
+@dp.message_handler(text="Отменить ввод", state = [MenuButton.start_ml,
+                                                   MenuButton.start_info_for_ml_cian,
+                                                   MenuButton.get_real_target])
 async def cancel_ml(message: types.Message, state: FSMContext):
     await message.answer("*Вы вернулись в меню.*",
                          reply_markup=menu_first,
@@ -265,7 +267,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     data['metro_time_log'] = np.log(metro_time)
 
                 dictionary = dictionary['display_name'].split(', ')
-                print(dictionary)
+
                 for i in range(len(dictionary)):
                     if ("район " in dictionary[i]) or (" район" in dictionary[i]):
                         district = dictionary[i]
@@ -304,7 +306,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                        await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""")
+                        await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""", reply_markup=ReplyKeyboardRemove())
                         await message.answer("*Укажите коммисию*", reply_markup=comissions, parse_mode="Markdown")
 
                 except UnboundLocalError:
@@ -455,7 +457,6 @@ async def get_adress_info(message: types.Message, state: FSMContext):
 
 
                 dictionary = dictionary['display_name'].split(', ')
-                print(dictionary)
 
                 for i in range(len(dictionary)):
                     if ("район " in dictionary[i]) or (" район" in dictionary[i]):
@@ -496,7 +497,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                     async with state.proxy() as data:
                         data['mpa'] = df_2_dict['mpa'][oper]
 
-                    await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""")
+                    await message.answer("""Для прогнозирования требуется некоторая информация о квартире.""", reply_markup=ReplyKeyboardRemove())
 
                     await message.answer("*Укажите коммисию*", reply_markup=comissions, parse_mode="Markdown")
 
@@ -790,17 +791,30 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
     square = message.text
     square = square.split(' ')
 
-    for i in range(len(square)):
-        if square[i].isdigit() is False:
-            await message.answer("Проверьте формат ввода")
+    if len(square) != 3:
+        await message.answer("Проверьте формат ввода")
+        return
+
+    for ans in square:
+        if not ans.isdigit():
+            await message.answer("Символ *'{0}'* не является числом. Проверьте формат ввода.".format(ans), parse_mode="Markdown")
+            return
+
+    if len(square[2]) != 4:
+        await message.answer("Возраст дома --- *{0}* --- не является правдой. Проверьте формат ввода.".format(square[2]),
+                             parse_mode="Markdown")
+        return
+
+    if int(square[2]) < 1950 and int(square[2]) > 2023:
+        await message.answer("Возраст дома не лежит в доступном диапазоне "
+                             "--- *от 1950 до 2023* --- проверьте формат ввода", parse_mode="Markdown")
+        return
 
     async with state.proxy() as data:
         data['square_log'] = float(square[0])
         data['floor_log'] = np.log(float(square[1]) + 1e-7)
         data['built_house'] = float(square[2])
         data['mpa'] = (data['mpa'] / 40) * float(square[0])
-
-
 
     async with state.proxy() as df:
         df = pd.DataFrame()
@@ -809,23 +823,43 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
     df = df[columns]
     df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index=False)
 
-    await state.finish()
     await message.answer("Информация получена! Ожидайте")
-
-
 
     ans = predict(message.from_user.username)
     await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
+    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index_col=False)
+    df['mpa'] = round(np.mean(ans), 0)
+    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index=False)
+
     time.sleep(5)
 
     await message.answer(f"*Аренда за эту квартиру составляет {round(np.mean(ans), 0)} руб.\n"
-                         f"Я уверен в прогнозе на {round((1 - (np.var(ans) ** 0.5 / np.mean(ans))) * 100, 0)} %.*", parse_mode='Markdown', reply_markup=menu_first)
+                         f"Я уверен в прогнозе на {round((1 - (np.var(ans) ** 0.5 / np.mean(ans))) * 100, 0)} %.*", parse_mode='Markdown')
 
-    # f"*Decision Tree O(1): {ans[0]} руб.\n"
-    # f"Decision Tree O(N  log N): {ans[1]} руб.\n"
-    # f"Bagging Tree O(10N log N): {ans[2]} руб.\n"
-    # f"Bagging Tree O(50N log N): {ans[3]} руб.\n"
-    # f"Bagging Tree O(100N log N): {ans[4]} руб.\n"
-    # f"Mean for all model: {round(np.mean(ans), 0)} руб.\n"
-    # f"Standart Deviation: {round(np.var(ans) ** 0.5, 0)} руб."
+    time.sleep(2)
+    await message.answer(f"При желании, Вы можете указать предполагаемую стоимость аренды квартиры.\n"
+                         f"Если Вы этого не хотите - нажмите на кнопку *отмена*", parse_mode="Markdown", reply_markup=menu_back_from_random_state)
+
+    await state.finish()
+    await MenuButton.get_real_target.set()
+
+@dp.message_handler(state = MenuButton.get_real_target)
+async def real_predict_target(message: types.Message, state: FSMContext):
+    answer = message.text
+
+    if not answer.isdigit():
+        await message.answer("Символ *'{0}'* не является числом. Проверьте формат ввода.".format(answer),
+                             parse_mode="Markdown")
+        return
+
+    real_predict_target = pd.read_excel("data_information/real_predict_target.xlsx", index_col=False)
+    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index_col=False)
+    predict = df['mpa'][0]
+    new_row = {"real": answer, "predict": predict}
+    real_predict_target = real_predict_target.append(new_row, ignore_index=True)
+    real_predict_target.to_excel("data_information/real_predict_target.xlsx", index = False)
+    await message.answer("*Спасибо! Это помогает мне быть точнее*", parse_mode="Markdown", reply_markup=menu_first)
+    await state.finish()
+
+
