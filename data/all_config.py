@@ -1,7 +1,77 @@
-import pandas as pd
 from selenium.webdriver.chrome.service import Service
+import os
+
 TOKEN = r"2145614320:AAEEkcgJRryvRVPhbVUdOWPAvM7iZwAV718"
-Andrew_PATH_driver = Service(r"C:\Users\Andrew\Desktop\tg-bot\handlers\users\parser\chromedriver.exe")
+
+find_driver = r"{0}".format(os.path.abspath("handlers/users/parser/chromedriver.exe"))
+Andrew_PATH_driver = Service(find_driver)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 columns = ['price', 'Комиссия', 'count_room', 'built_house', 'balcony',
        'Наличие мебели', 'Музеи', 'Салоны красоты косметических услуг',
