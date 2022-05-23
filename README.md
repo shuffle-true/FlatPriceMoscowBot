@@ -6,7 +6,8 @@
 
 __[тут->ТЗ](https://github.com/LilPomidorLil/course_paper_1/blob/master/course.pdf)__
 
-__[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__
+__[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__ (_в разработке_)
+
 
 
 __Current Version - 1.0.2__
@@ -15,4 +16,9 @@ __Current Version - 1.0.2__
 
 ## Запуск
 
-Откройте __app.py__ и запустите.
+Откройте __app.py__ через IDE, установите все зависимости и запустите.
+
+__Я не проверял запуск на другом компьютере, поэтому может не сработать.__
+
+Если хотите посмотреть на функционал бота, то можно написать __[сюда](https://t.me/ro_a_k)__, я его запущу, и Вы сможете посмотреть на него.
+
