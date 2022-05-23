@@ -31,7 +31,7 @@ async def link_cian(message: types.Message):
 @dp.message_handler(state=MenuButton.start_info_for_ml_cian)
 async def get_link_cian(message: types.Message, state: FSMContext):
     flag = True
-    await message.answer("Начал собирать информацию о квартире....")
+    await message.answer("Начал собирать информацию о квартире....", reply_markup=ReplyKeyboardRemove())
     pars = Parser()
     try:
         soup = pars.get_flat(np.array([str(message.text)]), 0)
@@ -84,6 +84,12 @@ async def get_link_cian(message: types.Message, state: FSMContext):
             # await message.answer("*Начинаю предсказание...*", parse_mode="Markdown")
 
             ans = predict(message.from_user.id)
+
+            real_predict_target = pd.read_excel("data_information/real_predict_target.xlsx", index_col=False)
+            df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index_col=False)
+            new_row = {"real": df['price'][0], "predict": round(np.mean(ans), 0)}
+            real_predict_target = real_predict_target.append(new_row, ignore_index=True)
+            real_predict_target.to_excel("data_information/real_predict_target.xlsx", index=False)
 
             await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
