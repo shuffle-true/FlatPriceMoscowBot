@@ -821,16 +821,16 @@ async def get_square_floor_year__build(message: types.Message, state: FSMContext
 
     df = df.append(data.as_dict(), ignore_index=True)
     df = df[columns]
-    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index=False)
+    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index=False)
 
     await message.answer("Информация получена! Ожидайте")
 
-    ans = predict(message.from_user.username)
+    ans = predict(message.from_user.id)
     await message.answer(f"{answer_ml[rnd.randint(0, len(answer_ml))]}\n\n*{random_fact[rnd.randint(0, len(random_fact))]}*", parse_mode="Markdown")
 
-    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index_col=False)
+    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index_col=False)
     df['mpa'] = round(np.mean(ans), 0)
-    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index=False)
+    df.to_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index=False)
 
     time.sleep(5)
 
@@ -854,7 +854,7 @@ async def real_predict_target(message: types.Message, state: FSMContext):
         return
 
     real_predict_target = pd.read_excel("data_information/real_predict_target.xlsx", index_col=False)
-    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.username), index_col=False)
+    df = pd.read_excel('USER_REQUEST/{}.xlsx'.format(message.from_user.id), index_col=False)
     predict = df['mpa'][0]
     new_row = {"real": answer, "predict": predict}
     real_predict_target = real_predict_target.append(new_row, ignore_index=True)
