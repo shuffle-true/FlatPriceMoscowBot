@@ -12,4 +12,4 @@ async def get_cancel_enter(message: types.Message):
     Возвращает в меню при нажатии "Отменить ввод"
     """
 
-    await message.answer('Вы вернулись в меню',reply_markup=menu_first)
+    await message.answer('*Вы вернулись в меню*',parse_mode="Markwodn", reply_markup=menu_first)
