@@ -2,6 +2,8 @@ from aiogram import types
 from aiogram.dispatcher.filters import Command
 from keyboards.default import menu_first, ml_choice
 from loader import dp
+from states import MenuButton
+from aiogram.dispatcher import FSMContext
 
 from tree import TreeRegressor
 from tree import TreeRegressorSlow
@@ -16,11 +18,17 @@ from aiogram.utils.markdown import link
 async def show_menu(message: types.Message):
     """
     Начало работы с ботом.
-
     Описание команды /start
     """
 
     await message.answer(f"Привет, {message.from_user.full_name}!", reply_markup=menu_first)
+    all_id = pd.read_excel("data_information/all_id.xlsx", index_col=False)
+    if message.from_user.id in all_id['id'].to_list():
+        return
+
+    new_row = {"id": message.from_user.id}
+    all_id = all_id.append(new_row, ignore_index=True)
+    all_id.to_excel("data_information/all_id.xlsx", index=False)
 
 @dp.message_handler(text = "Как мною пользоваться?")
 async def how_use_me(message: types.Message):
@@ -32,7 +40,21 @@ async def how_use_me(message: types.Message):
 async def choice_ml(message: types.Message):
     await message.answer("*Выберите вариант ввода информации*", parse_mode="Markdown", reply_markup=ml_choice)
 
+@dp.message_handler(Command("send_message"))
+async def send_message_start(message: types.Message):
+    await message.answer("Введите сообщение, которое необходимо отправить контактам.")
+    await MenuButton.set_all_message.set()
 
+@dp.message_handler(state = [MenuButton.set_all_message])
+async def send_message_end(message: types.Message, state: FSMContext):
+    mess = message.text
+    all_id = pd.read_excel("data_information/all_id.xlsx", index_col=False)
+    all_id = all_id['id'].to_list()
+
+    for id in all_id:
+        await message.bot.send_message(chat_id=id, text = mess, parse_mode="Markdown")
+
+    await state.finish()
 
 ##########################################################
 ###                FITTING - MODEL                     ###
