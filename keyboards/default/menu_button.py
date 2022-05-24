@@ -9,9 +9,9 @@ menu_first = ReplyKeyboardMarkup(
         # [
         #     KeyboardButton(text="Интерактивчик 😐")
         # ],
-        [
-            KeyboardButton(text="Как мною пользоваться?")
-        ],
+        # [
+        #     KeyboardButton(text="Как мною пользоваться?")
+        # ],
     ],
     resize_keyboard=True
 )
