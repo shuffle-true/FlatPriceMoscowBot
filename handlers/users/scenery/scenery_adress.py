@@ -35,7 +35,7 @@ def adress_preobras(answer):
     return answer
 
 def dist_metro(house_coord):
-    df_metro = pd.read_csv('METRO.csv')
+    df_metro = pd.read_csv('internal_files/METRO.csv')
     dist_metro = {}
     for i in range(df_metro.shape[0]):
         dist_metro[df_metro['station_name'][i]] = round(distance.distance(df_metro['coord'][i], house_coord).km,

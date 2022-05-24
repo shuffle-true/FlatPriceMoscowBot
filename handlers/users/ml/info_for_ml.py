@@ -134,7 +134,7 @@ class Preobras:
         sorted_dist_metro_dict: Dict - отсортированный словарь ближайших станций
 
         """
-        self.df_metro = pd.read_csv('METRO.csv')
+        self.df_metro = pd.read_csv('internal_files/METRO.csv')
         self.dist_metro = {}
 
         for i in range(self.df_metro.shape[0]):
@@ -278,7 +278,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 try:
                     district = district.split("район")[1].strip()
                     district = district.replace('ё', 'е')
-                    df_1 = pd.read_csv('DISTRICT.csv')
+                    df_1 = pd.read_csv('internal_files/DISTRICT.csv')
                     df_1 = df_1[columns_1]
                     df_1_dict = dict(df_1)
 
@@ -292,7 +292,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         async with state.proxy() as data:
                             data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
 
-                    df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+                    df_2 = pd.read_excel('internal_files/DISTRICT_COEF_.xlsx')
                     df_2_dict = dict(df_2)
 
                     for i in range(len(df_2_dict['district'])):
@@ -470,7 +470,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                 try:
                     district = district.split("район")[1].strip()
                     district = district.replace('ё', 'е')
-                    df_1 = pd.read_csv('DISTRICT.csv')
+                    df_1 = pd.read_csv('internal_files/DISTRICT.csv')
                     df_1 = df_1[columns_1]
                     df_1_dict = dict(df_1)
 
@@ -483,7 +483,7 @@ async def get_adress_info(message: types.Message, state: FSMContext):
                         async with state.proxy() as data:
                             data[columns_1_0[i]] = df_1_dict[columns_1_0[i]][oper]
 
-                    df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+                    df_2 = pd.read_excel('internal_files/DISTRICT_COEF_.xlsx')
                     df_2_dict = dict(df_2)
 
                     for i in range(len(df_2_dict['district'])):

@@ -381,13 +381,13 @@ class Preprocessing:
         """
 
         self.__df = df
-        self.__df_1 = pd.read_csv('DISTRICT.csv')
+        self.__df_1 = pd.read_csv('internal_files/DISTRICT.csv')
         self.__df_1 = self.__df_1[['Название района', 'Музеи', 'Салоны красоты косметических услуг',
         'Рестораны / кафе быстрого питания','Продовольственные магазины', 'Городские парки развлечений, аттракционов','Аптеки по продаже лекарств',
         'Маммологические центры, больницы, клиники, поликлиники','Фитнес-клубы, центры, залы']]
         self.__df = self.__df.merge(self.__df_1, left_on="district", right_on="Название района")
 
-        self.__df_2 = pd.read_excel('DISTRICT_COEF_.xlsx')
+        self.__df_2 = pd.read_excel('internal_files/DISTRICT_COEF_.xlsx')
         self.__df = self.__df.merge(self.__df_2, left_on="district", right_on="district")
 
         return self.__df
