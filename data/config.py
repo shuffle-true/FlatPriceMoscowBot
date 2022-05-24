@@ -6,9 +6,9 @@ from data.all_config import TOKEN
 load_dotenv()
 
 BOT_TOKEN = TOKEN
-admins = [
-    314715042
-]
+
+print("Enter separated by spaces admin ID below ->")
+admins = list(map(int, input().split()))
 
 ip = os.getenv("ip")
 
