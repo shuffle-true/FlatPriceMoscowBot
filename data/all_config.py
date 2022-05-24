@@ -1,7 +1,7 @@
 from selenium.webdriver.chrome.service import Service
 import os
 
-TOKEN = r"{0}".format(str(input("Enter bot TOKEN below ->\n")))
+TOKEN = r"{0}".format(input("Enter bot TOKEN below -> \n").strip())
 
 find_driver = r"{0}".format(os.path.abspath("handlers/users/parser/chromedriver.exe"))
 Andrew_PATH_driver = Service(find_driver)
