@@ -5,7 +5,7 @@ import numpy as np
 
 setup(
     cmdclass = { 'build_ext': build_ext},
-    ext_modules = [Extension("tree._tree", ['_tree.pyx'], include_dirs=[np.get_include(), "."])]
+    ext_modules = [Extension("_tree", ['_tree.pyx'], include_dirs=[np.get_include(), "."])]
 )
 
 
