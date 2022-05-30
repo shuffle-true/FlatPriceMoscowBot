@@ -96,4 +96,3 @@ async def get_df_flat(message: types.Document):
 @dp.message_handler(Command("open_preprocessing"),  user_id=admins)
 async def save_df_flat(message: types.Document):
     await message.reply_document(open("DataFrame_after_preprocessing.xlsx","rb"))
-    await message.reply_document(open("Value_after_preprocessing.xlsx","rb"))
