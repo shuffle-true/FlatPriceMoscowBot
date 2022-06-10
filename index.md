@@ -1,4 +1,6 @@
-# FlatPriceMoscowBot
+<p align="center">
+  <img src="flatpricemoscowbot.png" width="350" title="hover text">
+</p>
 
 Проект на курсовую 
 
