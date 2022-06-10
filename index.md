@@ -1,37 +1,47 @@
-## Welcome to GitHub Pages
+# FlatPriceMoscowBot
 
-You can use the [editor on GitHub](https://github.com/shuffle-true/FlatPriceMoscowBot/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Проект на курсовую 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Для ознакомления с проектом лучше всего почитать:
 
-### Markdown
+__[тут->ТЗ](https://github.com/LilPomidorLil/course_paper_1/blob/master/course.pdf)__
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+__[тут->Итоговый Отчет](https://github.com/LilPomidorLil/course_paper_1/blob/master/final_report.pdf)__
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+# How to скачать бота к себе на компьютер и запустить его локально
 
-1. Numbered
-2. List
+__Инструкция ниже написана для Windows.__
 
-**Bold** and _Italic_ and `Code` text
+__Шаг 0.__ - установка дополнительных программ
+- Убедитесь, что в системе установлен Google Chrome.
+- Проверьте его версию, скачайте __[драйвер](https://chromedriver.chromium.org/)__ необходимой версии.
 
-[Link](url) and ![Image](src)
-```
+__Шаг 1.__ - клонирование репозитория.
+- Создайте новую папку (она должна быть пустой - это __обязательно__)
+- Откройте командую строку и перейдите в новосозданную директорию.
+- Выполните команду ->
+ -`git clone https://github.com/shuffle-true/FlatPriceMoscowBot.git .`
+- Репозиторий клонирован к Вам локально.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+__Шаг 2.__ - установка зависимостей.
+- Убедитесь, что в системе установлен Python. Это можно сделать командой `python --version`
+- Находясь в директории проекта, выполните команду ->
+- `pip install -r requirements.txt`
+- Дождитесь завершения установки.
+- Замените драйвер, скачанный __[отсюда](https://chromedriver.chromium.org/)__, в папке `handlers/users/parser`.
 
-### Jekyll Themes
+__Шаг 3.__ - компилирование моделей машинного обучения.
+- Находясь в директории проекта перейдите в папку .\tree - `cd tree`
+- Выполните команду - `python setup.py build_ext --inplace` - дождитесь завершения компиляции.
+- Вернитесь в директорию проекта .\ - `cd ..`
+- Перейдите в папку .\boosting - `cd boosting`
+- Выполните команду - `python setup.py build_ext --inplace` - дождитесь завершения компиляции.
+- Вернитесь в директорию проекта .\ - `cd ..`
+- Модели скомпилированы и готовы к работе.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/shuffle-true/FlatPriceMoscowBot/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+__Шаг 4.__ - запуск бота
+- Находясь в директории проекта выполните команду - `python app.py`
+- Следуйте дальнейшим инструкциям.
+- Для остановки бота нажмите в командной строке `ctrl+c`
